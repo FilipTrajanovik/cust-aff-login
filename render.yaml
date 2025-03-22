@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: customer-affiliate-app
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn customerAffLogin.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: customerAffLogin.settings
+      - key: SECRET_KEY
+        value: django-insecure-!+l$0rz-!7(v++b=a0-cb7^6@j3$3=c9dil8(_z9-5_!se_(bu
