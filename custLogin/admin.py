@@ -5,7 +5,7 @@ from custLogin.models import Customer, ManagerProfile
 # Register your models here.
 
 class CustomerProfileAdmin(admin.ModelAdmin):
-    include=[]
+
     exclude=['manager', ]
 
     def save_model(self, request, obj, form, change):
