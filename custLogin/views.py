@@ -48,7 +48,7 @@ def manager_dashboard(request):
             manager=profile,
             email__icontains=query
         ) | Customer.objects.filter(
-            manager = profile,
+            manager=profile,
             phone__icontains=query
         )
     else:
@@ -138,18 +138,23 @@ def edit_customer(request, id):
 @login_required(login_url='/manager/login/')
 def confirm_cashout(request, id):
     customer = Customer.objects.get(id=id)
-    if request.method == 'POST':
-        form = CustomerCashOutForm(request.POST, instance=customer)
-        if form.is_valid():
-            customer = form.save(commit=False)
-            customer.payout_date = timezone.now().date() + timedelta(30)
-            customer.save()
-            messages.success(request, 'Customer cash out successfully!')
-            return redirect('manager_dashboard')
-    else:
-        form = CustomerCashOutForm(instance=customer)
+    # if request.method == 'POST':
+    #        form = CustomerCashOutForm(request.POST, instance=customer)
+    #       if form.is_valid():
+    #          customer = form.save(commit=False)
+    #         customer.payout_date = timezone.now().date() + timedelta(30)
+    #        customer.save()
+    #       messages.success(request, 'Customer cash out successfully!')
+    #      return redirect('manager_dashboard')
+    # else:
+    #    form = CustomerCashOutForm(instance=customer)
+    # customer.payout_date = timezone.now().date() + timedelta(days=30)
 
-    return render(request, 'confirm_cashout.html', {'form': form, 'customer': customer})
+    customer.payout_date = timezone.now().date() + timedelta(days=30)
+    customer.save()
+
+    return redirect('manager_dashboard.html')
+
 
 @login_required(login_url='/manager/login/')
 def delete_customer(request, id):

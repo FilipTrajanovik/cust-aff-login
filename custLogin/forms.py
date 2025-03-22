@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['email', 'phone', 'address']
+        fields = ['email', 'phone', 'address', 'balance']
 
     def save(self, manager=None, commit=True):
         instance = super().save(commit=False)
@@ -39,7 +39,7 @@ class CustomerForm(forms.ModelForm):
 class CustomerEditForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['username', 'email', 'phone', 'address', 'raw_password', 'can_cashout']
+        fields = ['username', 'email', 'phone', 'balance' ,'address', 'raw_password', 'can_cashout']
 
 class CustomerCashOutForm(forms.ModelForm):
     class Meta:
