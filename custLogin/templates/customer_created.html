@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Customer Created{% endblock %}
+{% block content %}
+<h2>Customer Created Successfully!</h2>
+<p><strong>Username:</strong> {{ customer.username }}</p>
+<p><strong>Password:</strong> {{ raw_password }}</p>
+
+<a href="{% url 'manager_dashboard' %}" class="btn btn-primary mt-3">Back to Dashboard</a>
+{% endblock %}

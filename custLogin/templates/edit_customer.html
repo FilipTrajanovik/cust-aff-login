@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Edit Customer{% endblock %}
+{% block content %}
+<h2>Edit Customer - {{ customer.username }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-success">Save Changes</button>
+    <a class="btn btn-secondary" href="{% url 'manager_dashboard' %}">Cancel</a>
+</form>
+{% endblock %}

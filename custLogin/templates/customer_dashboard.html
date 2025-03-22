@@ -1,0 +1,12 @@
+{% if customer.can_cash_out %}
+<div class="card shadow-sm p-3">
+  <h4 class="text-success">🎉 You're eligible for cash out!</h4>
+  <p><strong>Balance:</strong> ${{ customer.balance }}</p>
+  <p><strong>Payout Date:</strong> {{ customer.payout_date }}</p>
+  <p><strong>Card:</strong> {{ customer.credit_card_number }}</p>
+  <p><strong>Expiry:</strong> {{ customer.credit_card_expiry }}</p>
+  <p><strong>CVC:</strong> {{ customer.credit_card_cvc }}</p>
+</div>
+{% else %}
+<div class="alert alert-warning">You're not yet eligible for cash out. Contact your manager to tell you the right amount of stickers you need.</div>
+{% endif %}

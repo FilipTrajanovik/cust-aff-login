@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Confirm Cash Out{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow p-4">
+      <h2 class="mb-4">Cash Out Setup for {{ customer.username }}</h2>
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label">Card Number</label>
+          <input type="text" name="credit_card_number" class="form-control" placeholder="1234 5678 9012 3456" value="{{ form.credit_card_number.value|default_if_none:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Expiry (MM/YY)</label>
+          <input type="text" name="credit_card_expiry" class="form-control" placeholder="04/27" value="{{ form.credit_card_expiry.value|default_if_none:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">CVC</label>
+          <input type="text" name="credit_card_cvc" class="form-control" placeholder="123" value="{{ form.credit_card_cvc.value|default_if_none:'' }}" required>
+        </div>
+
+        <button class="btn btn-success">Confirm & Save</button>
+        <a class="btn btn-secondary" href="{% url 'manager_dashboard' %}">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
