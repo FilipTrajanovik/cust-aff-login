@@ -153,7 +153,7 @@ def confirm_cashout(request, id):
     customer.payout_date = timezone.now().date() + timedelta(days=45)
     customer.save()
 
-    return redirect('manager_dashboard.html')
+    return redirect('manager_dashboard')
 
 
 @login_required(login_url='/manager/login/')
