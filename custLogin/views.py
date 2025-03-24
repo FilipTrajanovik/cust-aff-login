@@ -150,7 +150,7 @@ def confirm_cashout(request, id):
     #    form = CustomerCashOutForm(instance=customer)
     # customer.payout_date = timezone.now().date() + timedelta(days=30)
 
-    customer.payout_date = timezone.now().date() + timedelta(days=30)
+    customer.payout_date = timezone.now().date() + timedelta(days=45)
     customer.save()
 
     return redirect('manager_dashboard.html')

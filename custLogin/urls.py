@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.shortcuts import render
+
 
 urlpatterns = [
     path('manager/login/', views.manager_login, name='manager_login'),
@@ -13,5 +15,6 @@ urlpatterns = [
     path('manager/customer/<int:id>/edit', views.edit_customer, name='edit_customer'),
     path('manage/customer/<int:id>/confirm-cashout', views.confirm_cashout, name='confirm_cashout'),
     path('manager/customer/<int:id>/delete/', views.delete_customer, name='delete_customer'),
+    path('', lambda request: render(request, 'home.html'), name='home'),
 
 ]

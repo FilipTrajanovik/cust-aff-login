@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Welcome | TF Sticker{% endblock %}
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="fw-bold mb-4">💸 Welcome to TF Sticker Cash Out System</h1>
+    <p class="mb-4">Please choose your role to continue:</p>
+
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-4">
+        <a href="{% url 'manager_login' %}" class="btn btn-dark btn-lg px-4 py-2">
+            👨‍💼 Manager Login
+        </a>
+        <a href="{% url 'customer_login' %}" class="btn btn-success btn-lg px-4 py-2">
+            👤 Customer Login
+        </a>
+    </div>
+</div>
+{% endblock %}
