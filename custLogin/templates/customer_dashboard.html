@@ -1,24 +1,52 @@
-{% extends "base.html" %}
-{% block title %}Customer Dashboard{% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 
-<div class="card shadow mx-auto" style="max-width: 600px;">
-  <div class="card-body text-center">
-    <h2 class="fw-bold mb-3">💵 Welcome to TF Sticker Cash Out</h2>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">TF Sticker 💸</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-    <h4 class="text-success mb-3">Balance: ${{ customer.balance }}</h4>
+<!-- Dashboard Content -->
+<div class="container mt-4">
+  <div class="card shadow mx-auto text-center" style="max-width: 600px;">
+    <div class="card-body">
+      <h2 class="fw-bold mb-3">💵 Welcome to TF Sticker Cash Out</h2>
+      <h4 class="text-success mb-3">Balance: ${{ customer.balance }}</h4>
 
-    {% if customer.can_cashout %}
-      <div class="alert alert-success">
-        ✅ You're eligible for cash out!<br>
-        📅 Payout Date: <strong>{{ customer.payout_date }}</strong>
-      </div>
-    {% else %}
-      <div class="alert alert-warning">
-        ⚠️ You're not eligible yet. Contact your manager to find out how many stickers you need.
-      </div>
-    {% endif %}
+      {% if customer.can_cashout %}
+        <div class="alert alert-success">
+          ✅ You're eligible for cash out!<br>
+          📅 <strong>Payout Date:</strong> {{ customer.payout_date }}
+        </div>
+      {% else %}
+        <div class="alert alert-warning">
+          ⚠️ You're not eligible yet.<br>
+          Contact your manager to find out how many stickers you need.
+        </div>
+      {% endif %}
+    </div>
   </div>
 </div>
 
-{% endblock %}
+<!-- Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
