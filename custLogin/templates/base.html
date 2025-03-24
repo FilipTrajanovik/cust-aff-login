@@ -8,20 +8,33 @@
 </head>
 <body class="bg-light text-dark">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#">TF Sticker 💸</a>
-    <div class="collapse navbar-collapse">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">TF Sticker 💸</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        {% if request.user.is_authenticated and request.user.managerprofile %}
-          <li class="nav-item"><a href="{% url 'manager_dashboard' %}" class="nav-link">Dashboard</a></li>
-          <li class="nav-item"><a href="{% url 'create_customer' %}" class="nav-link">Add Customer</a></li>
+
+        {% if request.user.is_authenticated %}
+            {% if request.user.managerprofile %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'manager_dashboard' %}">Dashboard</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'create_customer' %}">Add Customer</a></li>
+            {% endif %}
+
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+            </li>
         {% endif %}
-        <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link text-danger">Logout</a></li>
+
       </ul>
     </div>
   </div>
 </nav>
+
 
 <div class="container my-4">
   {% block content %}{% endblock %}
