@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +12,7 @@
     <!-- Custom styles -->
     <style>
         body {
-            background: url('images/pozadinaStrana.png') no-repeat center center fixed;
+            background: url('{% static "images/pozadinaStrana.png" %}') no-repeat center center fixed;
             background-size: cover;
             color: white;
             font-family: Arial, sans-serif;
@@ -60,13 +62,15 @@
     <div class="d-flex align-items-center gap-5">
         <!-- Left: Bank Logo with label below -->
         <div class="text-center">
-            <img src="images/soPozadinaBankOfAmerica-removebg-preview.png" alt="Bank Logo" height="50">
+            {% load static %}
+            <img src="{% static 'images/soPozadinaBankOfAmerica-removebg-preview.png' %}" alt="Bank Logo" height="50">
             <h5 class="mt-2">BANK OF AMERICA</h5>
         </div>
 
         <!-- Right: Trump Sticker -->
         <div>
-            <img src="images/stiker.jpg" alt="Trump" class="circle-img mt-2">
+            {% load static %}
+            <img src="{%  static 'images/stiker.jpg' %}" alt="Trump" class="circle-img mt-2">
         </div>
     </div>
 </div>
@@ -86,7 +90,8 @@
         <div class="stars-line mt-4">★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★</div>
 
         <div class="mt-4">
-            <img src="images/stiker.jpg" alt="Trump" class="circle-img mb-3">
+            {% load static %}
+            <img src="{%  static 'images/stiker.jpg' %}" alt="Trump" class="circle-img mb-3">
             <h3>UNITE WITH US TO MAKE HISTORY</h3>
         </div>
 
