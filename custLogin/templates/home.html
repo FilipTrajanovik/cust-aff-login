@@ -1,17 +1,100 @@
-{% extends "base.html" %}
-{% block title %}Welcome | TF Sticker{% endblock %}
-{% block content %}
-<div class="text-center mt-5">
-    <h1 class="fw-bold mb-4">💸 Welcome to TF Sticker Cash Out System</h1>
-    <p class="mb-4">Please choose your role to continue:</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TF Sticker Cash Out System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <div class="d-flex flex-column flex-md-row justify-content-center gap-4">
-        <a href="{% url 'manager_login' %}" class="btn btn-dark btn-lg px-4 py-2">
-            👨‍💼 Manager Login
-        </a>
-        <a href="{% url 'customer_login' %}" class="btn btn-success btn-lg px-4 py-2">
-            👤 Customer Login
-        </a>
+    <!-- Custom styles -->
+    <style>
+        body {
+            background: url('images/pozadinaStrana.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .btn-red {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-blue {
+            background-color: blue;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stars-line {
+            color: red;
+            letter-spacing: 4px;
+        }
+
+        .circle-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-top: 30px;
+        }
+
+        .card img {
+            height: 180px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top logo and icon -->
+   <div class="container pt-4 d-flex justify-content-center">
+    <div class="d-flex align-items-center gap-5">
+        <!-- Left: Bank Logo with label below -->
+        <div class="text-center">
+            <img src="images/soPozadinaBankOfAmerica-removebg-preview.png" alt="Bank Logo" height="50">
+            <h5 class="mt-2">BANK OF AMERICA</h5>
+        </div>
+
+        <!-- Right: Trump Sticker -->
+        <div>
+            <img src="images/stiker.jpg" alt="Trump" class="circle-img mt-2">
+        </div>
     </div>
 </div>
-{% endblock %}
+
+    <!-- Main content -->
+    <div class="container mt-5">
+        <div class="stars-line mb-3">★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★</div>
+
+        <h2>Welcome to TF Sticker Cash Out System</h2>
+        <p>Please choose your role to continue:</p>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+            <a href="/manager/login" class="btn btn-red">MANAGER LOGIN</a>
+            <a href="/customer/login" class="btn btn-blue">CUSTOMER LOGIN</a>
+        </div>
+
+        <div class="stars-line mt-4">★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★</div>
+
+        <div class="mt-4">
+            <img src="images/stiker.jpg" alt="Trump" class="circle-img mb-3">
+            <h3>UNITE WITH US TO MAKE HISTORY</h3>
+        </div>
+
+        <div class="stars-line mt-4">★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★</div>
+
+        <!-- Financial Goals Section -->
+        <div class="section-title mt-5">Your financial goals matter</div>
+    </div>
+
+</body>
+</html>

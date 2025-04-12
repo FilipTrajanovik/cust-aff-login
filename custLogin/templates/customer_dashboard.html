@@ -6,8 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+         body {
+            background: url('images/pozadinaStrana.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+         #asd{
+             background: #07094f;
+             background: linear-gradient(90deg, rgba(7, 9, 79, 1) 0%, rgba(137, 87, 199, 1) 50%, rgba(237, 83, 83, 1) 100%);
+
+         }
+         #asd2 {
+             border: none;
+         }
+    </style>
 </head>
-<body>
+<body >
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
@@ -24,11 +41,11 @@
 </nav>
 
 <!-- Dashboard Content -->
-<div class="container mt-4">
-  <div class="card shadow mx-auto text-center" style="max-width: 600px;">
+<div class="container mt-40" >
+  <div class="card mx-auto text-center" id="asd2" style="max-width: 600px;">
     <div class="card-body">
       <h2 class="fw-bold mb-3">💵 Welcome to TF Sticker Cash Out</h2>
-      <h4 class="text-success mb-3">Balance: ${{ customer.balance }}</h4>
+      <h4 class="text-success mb-3 fw-bold">Balance: ${{ customer.balance }}</h4>
 
       {% if customer.can_cashout %}
         <div class="alert alert-success">
