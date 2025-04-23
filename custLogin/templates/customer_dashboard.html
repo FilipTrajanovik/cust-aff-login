@@ -30,7 +30,10 @@
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="#">TF Sticker 💸</a>
+    <a class="navbar-brand fw-bold" href="#">
+          <img src="{% static 'images/beloLogo-removebg-preview.png' %}" alt="Logo" height="40" style="transition: transform 0.3s;">
+         <span class="fw-bold">Trump Finance 💸</span>
+    </a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -45,7 +48,7 @@
 <div class="container mt-40" >
   <div class="card mx-auto text-center" id="asd2" style="max-width: 600px;">
     <div class="card-body">
-      <h2 class="fw-bold mb-3">💵 Welcome to TF Sticker Cash Out</h2>
+      <h2 class="fw-bold mb-3">💵 Welcome to Trump Finance Cash Out</h2>
       <h4 class="text-success mb-3 fw-bold">Balance: ${{ customer.balance }}</h4>
 
       {% if customer.can_cashout %}
