@@ -16,7 +16,7 @@
         }
         #asd2 {
             border: none;
-            background-color: #e0e0e0; /* light gray card background */
+            background-color: #282828;
             border-radius: 10px;
             padding: 20px;
         }
@@ -26,17 +26,21 @@
             font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         .balance-total {
-            background-color: #4400a6; /* purple-blue */
+            background-color: #4400a6;
             color: white;
         }
         .balance-available {
-            background-color: #ff69b4; /* pink */
+            background-color: #ff69b4;
             color: white;
         }
         .btn-withdraw {
-            background-color: #a4edaf;
+            background-color: #7FFF00;
             color: black;
             width: 100%;
             font-weight: bold;
@@ -85,14 +89,20 @@
 <div class="container mt-5">
     <div class="card mx-auto text-center" id="asd2" style="max-width: 700px;">
         <div class="card-body">
-            <h5 class="mb-3">📞 {{ customer.phone }} | 📧 {{ customer.email }}</h5>
-            <h2 class="fw-bold mb-4"> Trump Finance Account</h2>
+            <h5 class="mb-3 text-white">📞 {{ customer.phone }} | 📧 {{ customer.email }}</h5>
+            <h2 class="fw-bold mb-4 text-white"> Trump Finance Account</h2>
 
-            <div class="balance-box balance-total">Total Balance: ${{ customer.balance }}</div>
-            <div class="balance-box balance-available">Available Balance: {% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}</div>
+            <div class="balance-box balance-total">
+                <span>Total Balance:</span>
+                <span>${{ customer.balance }}</span>
+            </div>
+            <div class="balance-box balance-available">
+                <span>Available Balance:</span>
+                <span>{% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}</span>
+            </div>
 
             {% if customer.can_cashout %}
-                <a href="/withdraw-page" class="btn btn-withdraw mb-4">Withdraw</a>
+                <a href="withdraw_page.html" class="btn btn-withdraw mb-4">Withdraw</a>
             {% else %}
                 <div class="alert alert-warning">
                     ⚠️ You're not eligible yet.<br>
