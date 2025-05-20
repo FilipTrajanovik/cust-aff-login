@@ -18,14 +18,19 @@
          #asd{
              background: #07094f;
              background: linear-gradient(90deg, rgba(7, 9, 79, 1) 0%, rgba(137, 87, 199, 1) 50%, rgba(237, 83, 83, 1) 100%);
-
          }
          #asd2 {
              border: none;
          }
+         .crypto-card {
+             background: rgba(0,0,0,0.6);
+             border-radius: 10px;
+             padding: 10px;
+             margin: 10px;
+         }
     </style>
 </head>
-<body >
+<body>
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-transparent mb-4">
@@ -45,28 +50,73 @@
 </nav>
 
 <!-- Dashboard Content -->
-<div class="container mt-40" >
+<div class="container mt-5">
   <div class="card mx-auto text-center" id="asd2" style="max-width: 600px;">
     <div class="card-body">
-      <h2 class="fw-bold mb-3">💵 Welcome to Trump Finance Cash Out</h2>
-      <h4 class="text-success mb-3 fw-bold">Balance: ${{ customer.balance }}</h4>
+      <h4 class="mb-2">📞 {{ customer.phone }} | ✉️ {{ customer.email }}</h4>
+
+      <h2 class="fw-bold mb-3">💵 Trump Finance Account</h2>
+
+      <h5 class="mb-2">Total Balance: <span class="text-success">${{ customer.balance }}</span></h5>
+      <h5 class="mb-4">Available Balance:
+        <span class="text-warning">
+          {% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}
+        </span>
+      </h5>
 
       {% if customer.can_cashout %}
-        <div class="alert alert-success">
-          ✅ You're eligible for cash out!<br>
-          📅 <strong>Payout Date:</strong> {{ customer.payout_date }}
-        </div>
+        <a href="/withdraw-page" class="btn btn-success mb-3">Withdraw</a>
       {% else %}
         <div class="alert alert-warning">
           ⚠️ You're not eligible yet.<br>
           Contact your manager to find out how many stickers you need.
         </div>
       {% endif %}
+
+      <div class="row justify-content-center">
+        <div class="col-md-5 crypto-card">
+          <h5>BTC</h5>
+          <p>$
+            {% with btc=customer.balance|floatformat:2 %}
+              {{ btc|floatformat:2 }}
+              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"65000" }} BTC)</small>
+            {% endwith %}
+          </p>
+        </div>
+        <div class="col-md-5 crypto-card">
+          <h5>ETH</h5>
+          <p>$
+            {% with eth=customer.balance|floatformat:2 %}
+              {{ eth|floatformat:2 }}
+              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"3700" }} ETH)</small>
+            {% endwith %}
+          </p>
+        </div>
+        <div class="col-md-5 crypto-card">
+          <h5>XRP</h5>
+          <p>$
+            {% with xrp=customer.balance|floatformat:2 %}
+              {{ xrp|floatformat:2 }}
+              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"0.5" }} XRP)</small>
+            {% endwith %}
+          </p>
+        </div>
+        <div class="col-md-5 crypto-card">
+          <h5>XLM</h5>
+          <p>$
+            {% with xlm=customer.balance|floatformat:2 %}
+              {{ xlm|floatformat:2 }}
+              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"0.3" }} XLM)</small>
+            {% endwith %}
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- Bootstrap JS (optional) -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
