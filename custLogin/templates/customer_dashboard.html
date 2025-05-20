@@ -76,39 +76,19 @@
       <div class="row justify-content-center">
         <div class="col-md-5 crypto-card">
           <h5>BTC</h5>
-          <p>$
-            {% with btc=customer.balance|floatformat:2 %}
-              {{ btc|floatformat:2 }}
-              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"65000" }} BTC)</small>
-            {% endwith %}
-          </p>
+         <p>${{ customer.balance }} <br><small>(~{{ btc_amount }} BTC)</small></p>
         </div>
         <div class="col-md-5 crypto-card">
           <h5>ETH</h5>
-          <p>$
-            {% with eth=customer.balance|floatformat:2 %}
-              {{ eth|floatformat:2 }}
-              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"3700" }} ETH)</small>
-            {% endwith %}
-          </p>
+          <p>${{ customer.balance }} <br><small>({{ eth_amount }} BTC)</small></p>
         </div>
         <div class="col-md-5 crypto-card">
           <h5>XRP</h5>
-          <p>$
-            {% with xrp=customer.balance|floatformat:2 %}
-              {{ xrp|floatformat:2 }}
-              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"0.5" }} XRP)</small>
-            {% endwith %}
-          </p>
+         <p>${{ customer.balance }} <br><small>({{ xrp_amount }} BTC)</small></p>
         </div>
         <div class="col-md-5 crypto-card">
           <h5>XLM</h5>
-          <p>$
-            {% with xlm=customer.balance|floatformat:2 %}
-              {{ xlm|floatformat:2 }}
-              <br><small>(~{{ customer.balance|floatformat:2|divisibleby:"0.3" }} XLM)</small>
-            {% endwith %}
-          </p>
+          <p>${{ customer.balance }} <br><small>({{ xlm_amount }} BTC)</small></p>
         </div>
       </div>
 

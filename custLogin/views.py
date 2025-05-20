@@ -81,7 +81,14 @@ def customer_dashboard(request):
     if not customer_id:
         return redirect('customer_login')
     customer = Customer.objects.get(id=customer_id)
-    return render(request, 'customer_dashboard.html', {'customer': customer})
+    context ={
+        'customer': customer,
+        "btc_amount": round(customer.balance / 65000, 2),
+        "eth_amount": round(customer.balance / 3700, 2),
+        "xrp_amount": round(customer.balance / 0.5, 2),
+        "xlm_amount": round(customer.balance / 0.3, 2),
+    }
+    return render(request, 'customer_dashboard.html', context)
 
 
 # CUSTOMER CREATION
