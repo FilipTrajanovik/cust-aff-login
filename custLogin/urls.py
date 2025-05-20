@@ -16,5 +16,5 @@ urlpatterns = [
     path('manage/customer/<int:id>/confirm-cashout', views.confirm_cashout, name='confirm_cashout'),
     path('manager/customer/<int:id>/delete/', views.delete_customer, name='delete_customer'),
     path('', lambda request: render(request, 'home.html'), name='home'),
-
+    path('customer/withdraw', views.withdraw_page, name = 'withdraw_page')
 ]

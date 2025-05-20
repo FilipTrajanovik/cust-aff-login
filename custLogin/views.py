@@ -169,3 +169,17 @@ def delete_customer(request, id):
     customer.delete()
     messages.success(request, 'Customer deleted successfully.')
     return redirect('manager_dashboard')
+
+
+@login_required(login_url='/customers/login/')
+def withdraw_page(request):
+
+    customer_id = request.session['customer_id']
+    if not customer_id:
+        return redirect('customer_login')
+    customer = Customer.objects.get(id=customer_id)
+    context = {
+        'customer' : customer
+    }
+
+    return render(request, 'withdraw_page.html', context)
