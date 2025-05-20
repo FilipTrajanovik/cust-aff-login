@@ -5,98 +5,123 @@
     <meta charset="UTF-8">
     <title>Customer Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-         body {
+        body {
             background: url('{% static "images/pozadinaStrana.png" %}') no-repeat center center fixed;
             background-size: cover;
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
         }
-         #asd{
-             background: #07094f;
-             background: linear-gradient(90deg, rgba(7, 9, 79, 1) 0%, rgba(137, 87, 199, 1) 50%, rgba(237, 83, 83, 1) 100%);
-         }
-         #asd2 {
-             border: none;
-         }
-         .crypto-card {
-             background: rgba(0,0,0,0.6);
-             border-radius: 10px;
-             padding: 10px;
-             margin: 10px;
-         }
+        #asd2 {
+            border: none;
+            background-color: #e0e0e0; /* light gray card background */
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .balance-box {
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .balance-total {
+            background-color: #4400a6; /* purple-blue */
+            color: white;
+        }
+        .balance-available {
+            background-color: #ff69b4; /* pink */
+            color: white;
+        }
+        .btn-withdraw {
+            background-color: #a4edaf;
+            color: black;
+            width: 100%;
+            font-weight: bold;
+        }
+        .crypto-card {
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            color: white;
+        }
+        .btc-card {
+            background-color: #ffcc00;
+            color: black;
+        }
+        .eth-card {
+            background-color: #0a2540;
+        }
+        .xrp-card {
+            background-color: white;
+            color: black;
+        }
+        .xlm-card {
+            background-color: black;
+            color: white;
+        }
     </style>
 </head>
 <body>
 
-<!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-transparent mb-4">
-  <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="#">
-          <img src="{% static 'images/beloLogo-removebg-preview.png' %}" alt="Logo" height="40" style="transition: transform 0.3s;">
-         <span class="fw-bold">Trump Finance 💸</span>
-    </a>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
-        </li>
-      </ul>
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">
+            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" alt="Logo" height="40">
+            <span class="fw-bold">Trump Finance </span>
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
-<!-- Dashboard Content -->
 <div class="container mt-5">
-  <div class="card mx-auto text-center" id="asd2" style="max-width: 600px;">
-    <div class="card-body">
-      <h4 class="mb-2">📞 {{ customer.phone }} | ✉️ {{ customer.email }}</h4>
+    <div class="card mx-auto text-center" id="asd2" style="max-width: 700px;">
+        <div class="card-body">
+            <h5 class="mb-3">📞 {{ customer.phone }} | 📧 {{ customer.email }}</h5>
+            <h2 class="fw-bold mb-4"> Trump Finance Account</h2>
 
-      <h2 class="fw-bold mb-3">💵 Trump Finance Account</h2>
+            <div class="balance-box balance-total">Total Balance: ${{ customer.balance }}</div>
+            <div class="balance-box balance-available">Available Balance: {% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}</div>
 
-      <h5 class="mb-2">Total Balance: <span class="text-success">${{ customer.balance }}</span></h5>
-      <h5 class="mb-4">Available Balance:
-        <span class="text-warning">
-          {% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}
-        </span>
-      </h5>
+            {% if customer.can_cashout %}
+                <a href="/withdraw-page" class="btn btn-withdraw mb-4">Withdraw</a>
+            {% else %}
+                <div class="alert alert-warning">
+                    ⚠️ You're not eligible yet.<br>
+                    Contact your manager to find out how many stickers you need.
+                </div>
+            {% endif %}
 
-      {% if customer.can_cashout %}
-        <a href="/withdraw-page" class="btn btn-success mb-3">Withdraw</a>
-      {% else %}
-        <div class="alert alert-warning">
-          ⚠️ You're not eligible yet.<br>
-          Contact your manager to find out how many stickers you need.
+            <div class="row justify-content-center">
+                <div class="col-md-5 crypto-card btc-card">
+                    <h5>BTC</h5>
+                    <p>${{ customer.balance }}<br><small>(~{{ btc_amount }} BTC)</small></p>
+                </div>
+                <div class="col-md-5 crypto-card eth-card">
+                    <h5>ETH</h5>
+                    <p>${{ customer.balance }}<br><small>(~{{ eth_amount }} ETH)</small></p>
+                </div>
+                <div class="col-md-5 crypto-card xrp-card">
+                    <h5>XRP</h5>
+                    <p>${{ customer.balance }}<br><small>(~{{ xrp_amount }} XRP)</small></p>
+                </div>
+                <div class="col-md-5 crypto-card xlm-card">
+                    <h5>XLM</h5>
+                    <p>${{ customer.balance }}<br><small>(~{{ xlm_amount }} XLM)</small></p>
+                </div>
+            </div>
         </div>
-      {% endif %}
-
-      <div class="row justify-content-center">
-        <div class="col-md-5 crypto-card">
-          <h5>BTC</h5>
-         <p>${{ customer.balance }} <br><small>(~{{ btc_amount }} BTC)</small></p>
-        </div>
-        <div class="col-md-5 crypto-card">
-          <h5>ETH</h5>
-          <p>${{ customer.balance }} <br><small>({{ eth_amount }} BTC)</small></p>
-        </div>
-        <div class="col-md-5 crypto-card">
-          <h5>XRP</h5>
-         <p>${{ customer.balance }} <br><small>({{ xrp_amount }} BTC)</small></p>
-        </div>
-        <div class="col-md-5 crypto-card">
-          <h5>XLM</h5>
-          <p>${{ customer.balance }} <br><small>({{ xlm_amount }} BTC)</small></p>
-        </div>
-      </div>
-
     </div>
-  </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
