@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Convert Crypto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        #wrapper {
+            display: flex;
+        }
+
+        #sidebar-wrapper {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #111;
+            padding-top: 20px;
+            height: 100vh;
+        }
+
+        .sidebar-heading {
+            font-size: 1.5rem;
+            padding: 10px 20px;
+        }
+
+        .list-group-item:hover {
+            background-color: #222;
+        }
+
+        #page-content-wrapper {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .form-container {
+            background-color: #1c1c1c;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .form-control, .form-select {
+            background-color: #222;
+            color: white;
+            border: none;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex" id="wrapper">
+    <!-- Sidebar -->
+    <div class="bg-dark" id="sidebar-wrapper">
+        <div class="sidebar-heading text-white text-center">
+            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="Logo"><br>
+            Trump Finance
+        </div>
+        <div class="list-group list-group-flush text-white">
+            <a href="{% url 'crypto_home' %}" class="list-group-item list-group-item-action bg-dark text-white">🏠
+                Dashboard</a>
+            <a href="{% url 'display_wallets' %}" class="list-group-item list-group-item-action bg-dark text-white">👛
+                Wallets</a>
+            <a href="{% url 'crypto_profile' %}" class="list-group-item list-group-item-action bg-dark text-white">👤
+                Profile</a>
+            <a href="{% url 'crypto_transfer' %}" class="list-group-item list-group-item-action bg-dark text-white">💸
+                Transfer</a>
+            <a href="{% url 'crypto_convert' %}"
+               class="list-group-item list-group-item-action bg-dark text-white active">🔄 Convert</a>
+            <a href="{% url 'crypto_news' %}" class="list-group-item list-group-item-action bg-dark text-white active">🧠
+                News</a>
+
+            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action bg-dark text-danger">🚪 Logout</a>
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container mt-5">
+            <!-- Page title -->
+            <h2 class="text-center mb-1">🔄 Convert Crypto</h2>
+
+            <!-- Motivational Quote -->
+            <div class="text-center text-light mb-4 fst-italic">
+                “Shift value, shape your future.”
+            </div>
+
+            <!-- Conversion Form Card (Split Half) -->
+            <div class="d-flex justify-content-center">
+                <div class="card w-100"
+                     style="max-width: 700px; background-color: #1c1c1c; border: none; border-radius: 15px;">
+                    <div class="row g-0">
+                        <!-- Left Text Half -->
+                        <div class="col-md-6 d-flex flex-column justify-content-center align-items-center text-white p-4"
+                             style="background-color: #202020; border-top-left-radius: 15px; border-bottom-left-radius: 15px;">
+                            <h5 class="mb-3">💱 Ready to convert?</h5>
+                            <p class="text-center">Select the currencies you want to exchange and enter the amount.
+                                We'll handle the math for you.</p>
+                        </div>
+
+                        <!-- Right Form Half -->
+                        <div class="col-md-6 p-4">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="from_crypto" class="form-label text-white">From Cryptocurrency:</label>
+                                    {{ form.from_crypto }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="to_crypto" class="form-label text-white">To Cryptocurrency:</label>
+                                    {{ form.to_crypto }}
+                                </div>
+                                <div class="mb-4">
+                                    <label for="amount" class="form-label text-white">Amount to Convert:</label>
+                                    {{ form.amount }}
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">🔁 Convert</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                <div class="mt-4" style="max-width: 700px; margin: auto;">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

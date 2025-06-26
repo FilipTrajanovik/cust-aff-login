@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crypto Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        #wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebar-wrapper {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #111;
+            padding-top: 20px;
+            height: 100vh;
+            position: fixed; /* 📌 Pin it to left */
+            top: 0;
+            left: 0;
+
+        }
+
+        .sidebar-heading {
+            font-size: 1.5rem;
+            padding: 10px 20px;
+        }
+
+        .list-group-item {
+            border: none;
+        }
+
+        .list-group-item:hover {
+            background-color: #222;
+        }
+
+        #page-content-wrapper {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+        }
+
+        canvas {
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex" id="wrapper">
+    <!-- Sidebar -->
+    <div class="bg-dark" id="sidebar-wrapper">
+        <div class="sidebar-heading text-white text-center">
+            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="Logo"><br>
+            Trump Finance
+        </div>
+        <div class="list-group list-group-flush text-white">
+            <a href="{% url 'crypto_home' %}" class="list-group-item list-group-item-action bg-dark text-white">🏠
+                Dashboard</a>
+            <a href="{% url 'display_wallets' %}" class="list-group-item list-group-item-action bg-dark text-white">👛
+                Wallets</a>
+            <a href="{% url 'crypto_profile' %}" class="list-group-item list-group-item-action bg-dark text-white">👤
+                Profile</a>
+            <a href="{% url 'crypto_convert' %}" class="list-group-item list-group-item-action bg-dark text-white">🔄
+                Convert</a>
+
+            <a href="{% url 'crypto_transfer' %}" class="list-group-item list-group-item-action bg-dark text-white">💸
+                Transfer</a>
+            <a href="{% url 'crypto_home' %}" class="list-group-item list-group-item-action bg-dark text-white">📈 Live
+                Prices</a>
+            <a href="{% url 'crypto_news' %}" class="list-group-item list-group-item-action bg-dark text-white active">🧠
+                News</a>
+
+            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action bg-dark text-danger">🚪 Logout</a>
+        </div>
+    </div>
+
+    <!-- Page content -->
+    <div id="page-content-wrapper" class="w-100">
+        <div class="container-fluid">
+            <h2 class="mb-4">🪙 Welcome to Your Crypto Wallet</h2>
+            <p>Hello <strong>{{ customer.username }}</strong></p>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <canvas id="btcChart" height="200"></canvas>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <canvas id="ethChart" height="200"></canvas>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <canvas id="xrpChart" height="200"></canvas>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <canvas id="xlmChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const createLiveChart = async (canvasId, label, color, coingeckoId) => {
+        const ctx = document.getElementById(canvasId).getContext("2d");
+
+        // Fetch live price history (last 5 days)
+        const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=usd&days=5`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const prices = data.prices.map(p => p[1]); // [timestamp, price]
+        const labels = ["5d ago", "4d", "3d", "2d", "1d"];
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: prices.slice(-5),
+                    borderColor: color,
+                    backgroundColor: color,
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {labels: {color: 'black'}}
+                },
+                scales: {
+                    x: {ticks: {color: 'black'}},
+                    y: {ticks: {color: 'black'}, beginAtZero: false}
+                }
+            }
+        });
+    };
+
+    createLiveChart("btcChart", "BTC Price", "gold", "bitcoin");
+    createLiveChart("ethChart", "ETH Price", "#0a2540", "ethereum");
+    createLiveChart("xrpChart", "XRP Price", "#222", "ripple");
+    createLiveChart("xlmChart", "XLM Price", "#555", "stellar");
+
+</script>
+
+</body>
+</html>
