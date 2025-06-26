@@ -1,9 +1,10 @@
-import os
 import requests
 from custLogin.models import Cryptocurrency
+import os
 
 NEWSAPI_KEY = os.environ.get("NEWSAPI_KEY")
 HUGGINGFACE_API_TOKEN = os.environ.get("HUGGINGFACE_API_TOKEN")
+
 
 def update_crypto_prices():
     cryptos = Cryptocurrency.objects.all()
@@ -17,6 +18,7 @@ def update_crypto_prices():
                 crypto.value_usd = price
                 crypto.save()
 
+
 def fetch_crypto_news(crypto_name):
     url = (
         f"https://newsapi.org/v2/everything?q={crypto_name}&language=en&sortBy=publishedAt&pageSize=5&apiKey={NEWSAPI_KEY}"
@@ -25,6 +27,7 @@ def fetch_crypto_news(crypto_name):
     if response.status_code == 200:
         return response.json().get("articles", [])
     return []
+
 
 def summarize_text(text):
     url = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
