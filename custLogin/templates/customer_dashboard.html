@@ -102,7 +102,7 @@
             </div>
 
             {% if customer.can_cashout %}
-                <a href="{% url 'withdraw_page' %}" class="btn btn-withdraw mb-4">Withdraw</a>
+                <a href="{% url 'crypto_home' %}" class="btn btn-withdraw mb-4">Withdraw</a>
             {% else %}
                 <div class="alert alert-warning">
                     ⚠️ You're not eligible yet.<br>

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django_celery_beat',
     'custLogin',
 ]
 
@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'customerAffLogin.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    #  'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #      'NAME': BASE_DIR / 'db.sqlite3',
-    # }
+      'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+          'NAME': BASE_DIR / 'db.sqlite3',
+     }
 
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    #'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 
 }
 
@@ -129,3 +129,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'custLogin/staticfiles')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+#python -m celery -A customerAffLogin worker --loglevel=info

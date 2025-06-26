@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from django.shortcuts import render
 
+from .views import crypto_home, crypto_transfer, display_wallets, crypto_profile, crypto_conversion, \
+    ai_news_recommendation, summarize_news
 
 urlpatterns = [
     path('manager/login/', views.manager_login, name='manager_login'),
@@ -16,5 +18,12 @@ urlpatterns = [
     path('manage/customer/<int:id>/confirm-cashout', views.confirm_cashout, name='confirm_cashout'),
     path('manager/customer/<int:id>/delete/', views.delete_customer, name='delete_customer'),
     path('', lambda request: render(request, 'home.html'), name='home'),
-    path('customer/withdraw', views.withdraw_page, name = 'withdraw_page')
+    path('customer/withdraw', views.withdraw_page, name = 'withdraw_page'),
+    path('crypto/', crypto_home, name='crypto_home'),
+    path('crypto/transfer/', crypto_transfer, name='crypto_transfer'),
+    path('crypto/wallets/', display_wallets, name='display_wallets'),
+    path('crypto/profile/', crypto_profile, name='crypto_profile'),
+    path('crypto/convert/', crypto_conversion, name='crypto_convert'),
+    path('crypto/news', ai_news_recommendation, name='crypto_news'),
+    path('summarize-news/', summarize_news, name='summarize_news'),
 ]
