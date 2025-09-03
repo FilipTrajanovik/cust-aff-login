@@ -8,13 +8,16 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
         body {
-            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             min-height: 100vh;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         #wrapper {
@@ -22,148 +25,687 @@
             min-height: 100vh;
         }
 
+        /* Enhanced Sidebar */
         #sidebar-wrapper {
-            min-width: 250px;
-            max-width: 250px;
-            background-color: #111;
-            padding-top: 20px;
+            min-width: 280px;
+            max-width: 280px;
+            background: linear-gradient(180deg, #111 0%, #1a1a1a 100%);
             height: 100vh;
-            position: fixed; /* 📌 Pin it to left */
+            position: fixed;
             top: 0;
             left: 0;
-
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+            border-right: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .sidebar-heading {
-            font-size: 1.5rem;
-            padding: 10px 20px;
+            font-size: 1.3rem;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .sidebar-heading img {
+            filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-brand {
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .list-group {
+            padding: 1rem 0;
         }
 
         .list-group-item {
             border: none;
+            background: transparent !important;
+            color: #ccc;
+            padding: 1rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .list-group-item:hover {
-            background-color: #222;
+            background: rgba(255, 215, 0, 0.1) !important;
+            color: #ffd700;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
         }
 
+        .list-group-item.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2)) !important;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .list-group-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.2) !important;
+            color: #ff6b6b !important;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
         #page-content-wrapper {
             flex: 1;
-            padding: 30px;
-            margin-left: 250px;
+            margin-left: 280px;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(44, 83, 100, 0.8));
+            min-height: 100vh;
         }
 
-        canvas {
-            background-color: white;
-            border-radius: 10px;
-            padding: 10px;
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .username-highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        /* Chart Cards */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.95));
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-color, #ffd700);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart-card.btc {
+            --accent-color: #f7931a;
+        }
+
+        .chart-card.eth {
+            --accent-color: #627eea;
+        }
+
+        .chart-card.xrp {
+            --accent-color: #23292f;
+        }
+
+        .chart-card.xlm {
+            --accent-color: #14b6e7;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .crypto-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .crypto-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .crypto-details h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .crypto-symbol {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .current-price {
+            text-align: right;
+        }
+
+        .price-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin: 0;
+        }
+
+        .price-change {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .price-up {
+            color: #28a745;
+        }
+
+        .price-down {
+            color: #dc3545;
+        }
+
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+
+        /* Loading States */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+            height: 20px;
+            margin: 0.5rem 0;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Error States */
+        .chart-error {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 250px;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .chart-error i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #dc3545;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            #sidebar-wrapper {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            #sidebar-wrapper.show {
+                transform: translateX(0);
+            }
+
+            #page-content-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #page-content-wrapper {
+                padding: 1rem;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .dashboard-header {
+                padding: 1.5rem;
+            }
+
+            .chart-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: rgba(255, 215, 0, 0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
 
-<div class="d-flex" id="wrapper">
-    <!-- Sidebar -->
-    <div class="bg-dark" id="sidebar-wrapper">
-        <div class="sidebar-heading text-white text-center">
-            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="Logo"><br>
-            Trump Finance
+    <div class="d-flex" id="wrapper">
+        <!-- Enhanced Sidebar -->
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="Logo">
+                <div class="sidebar-brand">Trump Finance</div>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'crypto_home' %}" class="list-group-item active">
+                    <i class="fas fa-home nav-icon"></i>
+                    Dashboard
+                </a>
+                <a href="{% url 'display_wallets' %}" class="list-group-item">
+                    <i class="fas fa-wallet nav-icon"></i>
+                    Wallets
+                </a>
+                <a href="{% url 'crypto_profile' %}" class="list-group-item">
+                    <i class="fas fa-user nav-icon"></i>
+                    Profile
+                </a>
+                <a href="{% url 'crypto_convert' %}" class="list-group-item">
+                    <i class="fas fa-exchange-alt nav-icon"></i>
+                    Convert
+                </a>
+                <a href="{% url 'crypto_transfer' %}" class="list-group-item">
+                    <i class="fas fa-paper-plane nav-icon"></i>
+                    Transfer
+                </a>
+                <a href="{% url 'crypto_home' %}" class="list-group-item">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    Live Prices
+                </a>
+                <a href="{% url 'crypto_news' %}" class="list-group-item">
+                    <i class="fas fa-newspaper nav-icon"></i>
+                    News
+                </a>
+                <div style="margin-top: auto; padding-top: 2rem;">
+                    <a href="{% url 'logout' %}" class="list-group-item text-danger">
+                        <i class="fas fa-sign-out-alt nav-icon"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="list-group list-group-flush text-white">
-            <a href="{% url 'crypto_home' %}" class="list-group-item list-group-item-action bg-dark text-white">🏠
-                Dashboard</a>
-            <a href="{% url 'display_wallets' %}" class="list-group-item list-group-item-action bg-dark text-white">👛
-                Wallets</a>
-            <a href="{% url 'crypto_profile' %}" class="list-group-item list-group-item-action bg-dark text-white">👤
-                Profile</a>
-            <a href="{% url 'crypto_convert' %}" class="list-group-item list-group-item-action bg-dark text-white">🔄
-                Convert</a>
 
-            <a href="{% url 'crypto_transfer' %}" class="list-group-item list-group-item-action bg-dark text-white">💸
-                Transfer</a>
-            <a href="{% url 'crypto_home' %}" class="list-group-item list-group-item-action bg-dark text-white">📈 Live
-                Prices</a>
-            <a href="{% url 'crypto_news' %}" class="list-group-item list-group-item-action bg-dark text-white active">🧠
-                News</a>
+        <!-- Enhanced Page Content -->
+        <div id="page-content-wrapper">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="welcome-title">Crypto Portfolio Dashboard</h1>
+                <p class="mb-0">Welcome back, <span class="username-highlight">{{ customer.username }}</span></p>
+            </div>
 
-            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action bg-dark text-danger">🚪 Logout</a>
-        </div>
-    </div>
-
-    <!-- Page content -->
-    <div id="page-content-wrapper" class="w-100">
-        <div class="container-fluid">
-            <h2 class="mb-4">🪙 Welcome to Your Crypto Wallet</h2>
-            <p>Hello <strong>{{ customer.username }}</strong></p>
-
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <canvas id="btcChart" height="200"></canvas>
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalValue">$0.00</div>
+                        <div class="stat-label">Portfolio Value</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="dayChange">+0.00%</div>
+                        <div class="stat-label">24h Change</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Active Assets</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="lastUpdate">--:--</div>
+                        <div class="stat-label">Last Update</div>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <canvas id="ethChart" height="200"></canvas>
+            </div>
+
+            <!-- Chart Grid -->
+            <div class="chart-grid">
+                <div class="chart-card btc">
+                    <div class="chart-header">
+                        <div class="crypto-info">
+                            <div class="crypto-icon">
+                                <i class="fab fa-bitcoin"></i>
+                            </div>
+                            <div class="crypto-details">
+                                <h3>Bitcoin</h3>
+                                <p class="crypto-symbol">BTC</p>
+                            </div>
+                        </div>
+                        <div class="current-price">
+                            <p class="price-value" id="btcPrice">Loading...</p>
+                            <p class="price-change" id="btcChange">--</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="btcChart"></canvas>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <canvas id="xrpChart" height="200"></canvas>
+
+                <div class="chart-card eth">
+                    <div class="chart-header">
+                        <div class="crypto-info">
+                            <div class="crypto-icon">
+                                <i class="fab fa-ethereum"></i>
+                            </div>
+                            <div class="crypto-details">
+                                <h3>Ethereum</h3>
+                                <p class="crypto-symbol">ETH</p>
+                            </div>
+                        </div>
+                        <div class="current-price">
+                            <p class="price-value" id="ethPrice">Loading...</p>
+                            <p class="price-change" id="ethChange">--</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ethChart"></canvas>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <canvas id="xlmChart" height="200"></canvas>
+
+                <div class="chart-card xrp">
+                    <div class="chart-header">
+                        <div class="crypto-info">
+                            <div class="crypto-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="crypto-details">
+                                <h3>Ripple</h3>
+                                <p class="crypto-symbol">XRP</p>
+                            </div>
+                        </div>
+                        <div class="current-price">
+                            <p class="price-value" id="xrpPrice">Loading...</p>
+                            <p class="price-change" id="xrpChange">--</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="xrpChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card xlm">
+                    <div class="chart-header">
+                        <div class="crypto-info">
+                            <div class="crypto-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="crypto-details">
+                                <h3>Stellar</h3>
+                                <p class="crypto-symbol">XLM</p>
+                            </div>
+                        </div>
+                        <div class="current-price">
+                            <p class="price-value" id="xlmPrice">Loading...</p>
+                            <p class="price-change" id="xlmChange">--</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="xlmChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar-wrapper').classList.toggle('show');
+        }
 
-<script>
-    const createLiveChart = async (canvasId, label, color, coingeckoId) => {
-        const ctx = document.getElementById(canvasId).getContext("2d");
+        // Enhanced chart creation with error handling and better styling
+        const createLiveChart = async (canvasId, label, color, coingeckoId, priceElementId, changeElementId) => {
+            const ctx = document.getElementById(canvasId).getContext("2d");
 
-        // Fetch live price history (last 5 days)
-        const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=usd&days=5`;
-        const response = await fetch(url);
-        const data = await response.json();
+            try {
+                // Fetch live price history (last 7 days)
+                const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=usd&days=7`;
+                const response = await fetch(url);
 
-        const prices = data.prices.map(p => p[1]); // [timestamp, price]
-        const labels = ["5d ago", "4d", "3d", "2d", "1d"];
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: label,
-                    data: prices.slice(-5),
-                    borderColor: color,
-                    backgroundColor: color,
-                    fill: false,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {labels: {color: 'black'}}
-                },
-                scales: {
-                    x: {ticks: {color: 'black'}},
-                    y: {ticks: {color: 'black'}, beginAtZero: false}
+                if (!response.ok) {
+                    throw new Error('API request failed');
                 }
+
+                const data = await response.json();
+
+                // Process price data
+                const prices = data.prices.slice(-24).map(p => p[1]); // Last 24 hours
+                const labels = Array.from({length: 24}, (_, i) => `${23-i}h ago`);
+
+                // Calculate current price and change
+                const currentPrice = prices[prices.length - 1];
+                const previousPrice = prices[prices.length - 2];
+                const priceChange = ((currentPrice - previousPrice) / previousPrice * 100);
+
+                // Update price displays
+                document.getElementById(priceElementId).textContent = `$${currentPrice.toFixed(2)}`;
+                const changeElement = document.getElementById(changeElementId);
+                changeElement.textContent = `${priceChange >= 0 ? '+' : ''}${priceChange.toFixed(2)}%`;
+                changeElement.className = `price-change ${priceChange >= 0 ? 'price-up' : 'price-down'}`;
+
+                // Create gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+                gradient.addColorStop(0, color + '40');
+                gradient.addColorStop(1, color + '10');
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: prices,
+                            borderColor: color,
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            pointHoverBorderWidth: 3,
+                            pointHoverBorderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                cornerRadius: 8,
+                                displayColors: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#666',
+                                    maxTicksLimit: 6
+                                }
+                            },
+                            y: {
+                                display: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#666',
+                                    callback: function(value) {
+                                        return '$' + value.toFixed(2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error(`Error loading ${label} chart:`, error);
+
+                // Show error state
+                const container = ctx.canvas.parentElement;
+                container.innerHTML = `
+                    <div class="chart-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Failed to load ${label} data</p>
+                        <small>Please try refreshing the page</small>
+                    </div>
+                `;
+
+                // Update price display
+                document.getElementById(priceElementId).textContent = 'Error';
+                document.getElementById(changeElementId).textContent = '--';
             }
+        };
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent =
+                now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Initialize charts
+        Promise.all([
+            createLiveChart("btcChart", "BTC Price", "#f7931a", "bitcoin", "btcPrice", "btcChange"),
+            createLiveChart("ethChart", "ETH Price", "#627eea", "ethereum", "ethPrice", "ethChange"),
+            createLiveChart("xrpChart", "XRP Price", "#23292f", "ripple", "xrpPrice", "xrpChange"),
+            createLiveChart("xlmChart", "XLM Price", "#14b6e7", "stellar", "xlmPrice", "xlmChange")
+        ]).then(() => {
+            updateLastUpdateTime();
         });
-    };
 
-    createLiveChart("btcChart", "BTC Price", "gold", "bitcoin");
-    createLiveChart("ethChart", "ETH Price", "#0a2540", "ethereum");
-    createLiveChart("xrpChart", "XRP Price", "#222", "ripple");
-    createLiveChart("xlmChart", "XLM Price", "#555", "stellar");
-
-</script>
+        // Auto-refresh charts every 5 minutes
+        setInterval(() => {
+            location.reload();
+        }, 300000);
+    </script>
 
 </body>
 </html>

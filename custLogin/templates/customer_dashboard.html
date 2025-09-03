@@ -6,133 +6,500 @@
     <title>Customer Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
             background: url('{% static "images/pozadinaStrana.png" %}') no-repeat center center fixed;
             background-size: cover;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: #ffd700 !important;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            padding: 2rem 0;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .account-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffd700, #ff6b35, #28a745);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .customer-details {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .customer-details span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-color, #ffd700);
+            opacity: 0.8;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
+        .stat-card.total-balance {
+            --accent-color: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .stat-card.available-balance {
+            --accent-color: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem auto;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #ffd700;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0;
+        }
+
+        /* Action Section */
+        .action-section {
+            margin-bottom: 3rem;
             text-align: center;
         }
-        #asd2 {
+
+        .withdraw-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             border: none;
-            background-color: #282828;
-            border-radius: 10px;
-            padding: 20px;
-        }
-        .balance-box {
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .balance-total {
-            background-color: #4400a6;
             color: white;
+            padding: 1.5rem 3rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+            position: relative;
+            overflow: hidden;
         }
-        .balance-available {
-            background-color: #ff69b4;
-            color: white;
-        }
-        .btn-withdraw {
-            background-color: #7FFF00;
-            color: black;
+
+        .withdraw-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            font-weight: bold;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
         }
-        .crypto-card {
-            border-radius: 10px;
-            padding: 10px;
-            margin: 10px;
+
+        .withdraw-btn:hover::before {
+            left: 100%;
+        }
+
+        .withdraw-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(40, 167, 69, 0.6);
             color: white;
         }
-        .btc-card {
-            background-color: #ffcc00;
-            color: black;
+
+        .eligibility-notice {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 87, 34, 0.2) 100%);
+            border: 2px solid rgba(255, 193, 7, 0.5);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            color: #fff;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
         }
-        .eth-card {
-            background-color: #0a2540;
+
+        .eligibility-notice strong {
+            color: #ffd700;
+            font-size: 1.2rem;
         }
-        .xrp-card {
-            background-color: white;
-            color: black;
+
+        /* Crypto Portfolio */
+        .portfolio-section {
+            margin-top: 3rem;
         }
-        .xlm-card {
-            background-color: black;
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .crypto-portfolio {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .crypto-item {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(40, 40, 40, 0.6) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crypto-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--crypto-color) 0%, transparent 70%);
+            opacity: 0.1;
+            transition: opacity 0.3s ease;
+        }
+
+        .crypto-item:hover::before {
+            opacity: 0.2;
+        }
+
+        .crypto-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--crypto-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .crypto-item.btc {
+            --crypto-color: #f7931a;
+        }
+
+        .crypto-item.eth {
+            --crypto-color: #627eea;
+        }
+
+        .crypto-item.xrp {
+            --crypto-color: #23292f;
+        }
+
+        .crypto-item.xlm {
+            --crypto-color: #14b6e7;
+        }
+
+        .crypto-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem auto;
+            background: var(--crypto-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
             color: white;
+            box-shadow: 0 0 20px rgba(var(--crypto-color), 0.4);
+        }
+
+        .crypto-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--crypto-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .crypto-usd {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .crypto-amount {
+            font-size: 1rem;
+            color: #ccc;
+            opacity: 0.8;
+        }
+
+        /* Security Footer */
+        .security-footer {
+            margin-top: 3rem;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(32, 201, 151, 0.1) 100%);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+
+        .security-text {
+            color: #20c997;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .security-text i {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .account-title {
+                font-size: 2rem;
+            }
+
+            .customer-details {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .withdraw-btn {
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+            }
+
+            .crypto-portfolio {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-transparent mb-4">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#">
-            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" alt="Logo" height="40">
-            <span class="fw-bold">Trump Finance </span>
-        </a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'images/beloLogo-removebg-preview.png' %}" alt="Logo" height="40">
+                <span>Trump Finance</span>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div class="container mt-5">
-    <div class="card mx-auto text-center" id="asd2" style="max-width: 700px;">
-        <div class="card-body">
-            <h5 class="mb-3 text-white">📞 {{ customer.phone }} | 📧 {{ customer.email }}</h5>
-            <h2 class="fw-bold mb-4 text-white"> Trump Finance Account</h2>
-
-            <div class="balance-box balance-total">
-                <span>Total Balance:</span>
-                <span>${{ customer.balance }}</span>
+    <div class="container dashboard-container">
+        <div class="dashboard-header">
+            <h1 class="account-title">Financial Dashboard</h1>
+            <div class="customer-details">
+                <span><i class="fas fa-phone"></i>{{ customer.phone }}</span>
+                <span><i class="fas fa-envelope"></i>{{ customer.email }}</span>
             </div>
-            <div class="balance-box balance-available">
-                <span>Available Balance:</span>
-                <span>{% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card total-balance">
+                <div class="stat-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="stat-label">Total Portfolio Value</div>
+                <div class="stat-value">${{ customer.balance }}</div>
             </div>
 
+            <div class="stat-card available-balance">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <div class="stat-label">Available for Withdrawal</div>
+                <div class="stat-value">{% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}</div>
+            </div>
+        </div>
+
+        <div class="action-section">
             {% if customer.can_cashout %}
-                <a href="{% url 'crypto_home' %}" class="btn btn-withdraw mb-4">Withdraw</a>
+                <a href="{% url 'crypto_home' %}" class="withdraw-btn">
+                    <i class="fas fa-download me-3"></i>
+                    Withdraw Now
+                </a>
             {% else %}
-                <div class="alert alert-warning">
-                    ⚠️ You're not eligible yet.<br>
-                    Contact your manager to find out how many stickers you need.
+                <div class="eligibility-notice">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;"></i><br>
+                    <strong>Account Verification Required</strong><br><br>
+                    Your account is currently under review. Contact your account manager to complete the verification process and unlock withdrawal privileges.
                 </div>
             {% endif %}
+        </div>
 
-            <div class="row justify-content-center">
-                <div class="col-md-5 crypto-card btc-card">
-                    <h5>BTC</h5>
-                    <p>${{ customer.balance }}<br><small>(~{{ btc_amount }} BTC)</small></p>
+        <div class="portfolio-section">
+            <h2 class="section-title">Crypto Holdings</h2>
+            <div class="crypto-portfolio">
+                <div class="crypto-item btc">
+                    <div class="crypto-icon">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                    <div class="crypto-name">Bitcoin</div>
+                    <div class="crypto-usd">${{ customer.balance }}</div>
+                    <div class="crypto-amount">{{ btc_amount }} BTC</div>
                 </div>
-                <div class="col-md-5 crypto-card eth-card">
-                    <h5>ETH</h5>
-                    <p>${{ customer.balance }}<br><small>(~{{ eth_amount }} ETH)</small></p>
+
+                <div class="crypto-item eth">
+                    <div class="crypto-icon">
+                        <i class="fab fa-ethereum"></i>
+                    </div>
+                    <div class="crypto-name">Ethereum</div>
+                    <div class="crypto-usd">${{ customer.balance }}</div>
+                    <div class="crypto-amount">{{ eth_amount }} ETH</div>
                 </div>
-                <div class="col-md-5 crypto-card xrp-card">
-                    <h5>XRP</h5>
-                    <p>${{ customer.balance }}<br><small>(~{{ xrp_amount }} XRP)</small></p>
+
+                <div class="crypto-item xrp">
+                    <div class="crypto-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="crypto-name">Ripple</div>
+                    <div class="crypto-usd">${{ customer.balance }}</div>
+                    <div class="crypto-amount">{{ xrp_amount }} XRP</div>
                 </div>
-                <div class="col-md-5 crypto-card xlm-card">
-                    <h5>XLM</h5>
-                    <p>${{ customer.balance }}<br><small>(~{{ xlm_amount }} XLM)</small></p>
+
+                <div class="crypto-item xlm">
+                    <div class="crypto-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="crypto-name">Stellar</div>
+                    <div class="crypto-usd">${{ customer.balance }}</div>
+                    <div class="crypto-amount">{{ xlm_amount }} XLM</div>
                 </div>
             </div>
         </div>
+
+        <div class="security-footer">
+            <div class="security-text">
+                <i class="fas fa-shield-alt"></i>
+                <span>Protected by military-grade encryption & multi-factor authentication</span>
+            </div>
+        </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -76,8 +76,8 @@ WSGI_APPLICATION = 'customerAffLogin.wsgi.application'
 
 DATABASES = {
     #  'default': {
-     #    'ENGINE': 'django.db.backends.sqlite3',
-    #      'NAME': BASE_DIR / 'db.sqlite3',
+    #   'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
 
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
@@ -117,19 +117,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS=[
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'custLogin/templates/static'),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'custLogin/staticfiles')
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-#python -m celery -A customerAffLogin worker --loglevel=info
+# python -m celery -A customerAffLogin worker --loglevel=info

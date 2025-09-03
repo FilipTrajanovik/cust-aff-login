@@ -1,51 +1,140 @@
 {% extends "base.html" %}
 {% block title %}Manager Dashboard{% endblock %}
+
 {% block content %}
+<!-- Add the custom CSS -->
+<style>
+    .customer-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+        overflow: hidden;
+    }
 
-<h2 class="mb-4 text-center">📋 Your Customers</h2>
+    .customer-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
 
-<form method="get" class="d-flex mb-3 flex-column flex-md-row gap-2 justify-content-center">
-  <input type="text" name="q" placeholder="Search customers..." class="form-control w-100 w-md-50" value="{{ request.GET.q }}">
-  <button type="submit" class="btn btn-outline-primary">🔍 Search</button>
-</form>
+    .customer-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        margin: 0 auto 1rem auto;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
 
-<div class="table-responsive">
-  <table class="table table-bordered table-hover table-striped text-center align-middle shadow">
-    <thead class="table-dark">
-      <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Balance</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for customer in customers %}
-        <tr>
-          <td>{{ customer.username }}</td>
-          <td>{{ customer.email }}</td>
-          <td>{{ customer.phone }}</td>
-          <td>${{ customer.balance }}</td>
-          <td>
-            {% if customer.can_cashout %}
-              <span class="badge bg-success">Eligible</span>
-            {% else %}
-              <span class="badge bg-warning text-dark">Pending</span>
-            {% endif %}
-          </td>
-          <td>
-            <a href="{% url 'edit_customer' customer.id %}" class="btn btn-sm btn-warning">✏️ Edit</a>
-            <a href="{% url 'view_customer' customer.id %}" class="btn btn-sm btn-info">👁 View</a>
-            <a href="{% url 'delete_customer' customer.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this customer?');">🗑 Delete</a>
-          </td>
-        </tr>
-      {% empty %}
-        <tr><td colspan="6">No customers found.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        padding: 0.5rem;
+        background: rgba(248, 249, 250, 0.5);
+        border-radius: 10px;
+    }
+
+    .info-icon {
+        width: 20px;
+        margin-right: 0.75rem;
+        color: #6c757d;
+    }
+
+    .balance-highlight {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #28a745;
+    }
+
+    .btn-modern {
+        border: none;
+        padding: 0.6rem 1rem;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+    <h2 class="mb-4 text-center">📋 Your Customers</h2>
+
+    <form method="get" class="d-flex mb-3 flex-column flex-md-row gap-2 justify-content-center">
+        <input type="text" name="q" placeholder="Search customers..."
+               class="form-control w-100 w-md-50 rounded-3" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-outline-primary rounded-3">🔍 Search</button>
+    </form>
+</div>
+
+<div class="row g-4">
+    {% for customer in customers %}
+    <div class="col-lg-4 col-md-6">
+        <div class="customer-card p-4 h-100">
+            <div class="text-center mb-3">
+                <div class="customer-avatar">
+                    👤
+                </div>
+                <h5 class="mb-2">{{ customer.username }}</h5>
+                <div class="mb-2">
+                    {% if customer.can_cashout %}
+                        <span class="badge bg-success rounded-pill">✅ Eligible</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark rounded-pill">⏳ Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="customer-info">
+                <div class="info-item">
+                    <i class="fas fa-envelope info-icon"></i>
+                    <span class="text-truncate">{{ customer.email }}</span>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-phone info-icon"></i>
+                    <span>{{ customer.phone }}</span>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-dollar-sign info-icon"></i>
+                    <span class="balance-highlight">${{ customer.balance }}</span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+                <a href="{% url 'edit_customer' customer.id %}" class="btn btn-warning btn-sm btn-modern flex-fill">
+                    ✏️ Edit
+                </a>
+                <a href="{% url 'view_customer' customer.id %}" class="btn btn-info btn-sm btn-modern flex-fill">
+                    👁 View
+                </a>
+                <a href="{% url 'delete_customer' customer.id %}" class="btn btn-danger btn-sm btn-modern flex-fill"
+                   onclick="return confirm('Delete this customer?');">
+                    🗑 Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="text-center p-5 bg-white rounded-4 shadow-sm">
+            <i class="fas fa-users mb-3" style="font-size: 4rem; color: #dee2e6;"></i>
+            <h4>No customers found</h4>
+            <p class="text-muted">Try adjusting your search criteria or add a new customer.</p>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

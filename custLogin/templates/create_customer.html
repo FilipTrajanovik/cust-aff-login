@@ -1,10 +1,521 @@
 {% extends "base.html" %}
 {% block title %}Create Customer{% endblock %}
 {% block content %}
-<h2>Create New Customer</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-success" type="submit">Create</button>
-</form>
+
+<style>
+    .create-form-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 25px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 2.5rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .form-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"><animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="80" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></circle><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"><animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite"/></circle></svg>');
+        opacity: 0.3;
+    }
+
+    .header-icon {
+        width: 100px;
+        height: 100px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem auto;
+        border: 3px solid rgba(255,255,255,0.2);
+        position: relative;
+        z-index: 1;
+    }
+
+    .header-icon i {
+        font-size: 2.5rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .form-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-subtitle {
+        opacity: 0.9;
+        font-size: 1.1rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-body {
+        padding: 2.5rem;
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title i {
+        margin-right: 0.75rem;
+        color: #007bff;
+        width: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .form-label i {
+        margin-right: 0.75rem;
+        width: 20px;
+        color: #6c757d;
+    }
+
+    .form-label .required {
+        color: #dc3545;
+        margin-left: 0.25rem;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 1rem 1.25rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        background: #f8f9fa;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        background: white;
+        transform: translateY(-2px);
+    }
+
+    .form-control:valid {
+        border-color: #28a745;
+        background: rgba(40, 167, 69, 0.05);
+    }
+
+    .balance-group {
+        position: relative;
+    }
+
+    .balance-group::before {
+        content: '$';
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.2rem;
+        z-index: 1;
+    }
+
+    .balance-group .form-control {
+        padding-left: 2.5rem;
+        color: #28a745;
+        font-weight: 600;
+        font-family: 'Courier New', monospace;
+    }
+
+    .auto-generate-info {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border: 1px solid #2196f3;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .auto-generate-info::before {
+        content: '🤖';
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: white;
+        padding: 0 10px;
+        font-size: 1.2rem;
+    }
+
+    .auto-generate-info h5 {
+        color: #1976d2;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .auto-generate-info ul {
+        margin: 0;
+        padding-left: 1.5rem;
+        color: #0d47a1;
+    }
+
+    .auto-generate-info li {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-help {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-help i {
+        margin-right: 0.5rem;
+        color: #17a2b8;
+    }
+
+    .action-section {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .btn-create {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+        padding: 1rem 3rem;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 200px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-create:hover {
+        background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    .btn-create:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-create i {
+        margin-right: 0.75rem;
+        font-size: 1.2rem;
+    }
+
+    .loading-state {
+        display: none;
+    }
+
+    .btn-create.loading .normal-state {
+        display: none;
+    }
+
+    .btn-create.loading .loading-state {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .preview-section {
+        background: #fff;
+        border: 2px dashed #dee2e6;
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .preview-section:hover {
+        border-color: #007bff;
+        background: rgba(0, 123, 255, 0.02);
+    }
+
+    .preview-content {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .preview-content.has-data {
+        color: #495057;
+        font-style: normal;
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .create-form-container {
+            margin: 0 1rem;
+        }
+
+        .form-header {
+            padding: 2rem 1rem;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+        }
+
+        .form-body {
+            padding: 2rem 1rem;
+        }
+
+        .btn-create {
+            width: 100%;
+            padding: 1rem 2rem;
+        }
+    }
+
+    /* Form validation styles */
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        background: rgba(220, 53, 69, 0.05);
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+</style>
+
+<div class="create-form-container">
+    <div class="form-card">
+        <!-- Form Header -->
+        <div class="form-header">
+            <div class="header-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1 class="form-title">Create New Customer</h1>
+            <p class="form-subtitle">Add a new customer to your Trump Finance Manager Profile</p>
+        </div>
+
+        <div class="form-body">
+
+            <form method="post" id="customerForm">
+                {% csrf_token %}
+
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-address-card"></i>
+                        Contact Information
+                    </h4>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            Email Address
+                            <span class="required">*</span>
+                        </label>
+                        <input type="email" name="email" id="emailInput" class="form-control"
+                               placeholder="customer@example.com" required>
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i>
+                            Will be used to generate username automatically
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-phone"></i>
+                            Phone Number
+                            <span class="required">*</span>
+                        </label>
+                        <input type="tel" name="phone" class="form-control"
+                               placeholder="+1 (555) 123-4567" required>
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i>
+                            Include country code for international numbers
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Address
+                        </label>
+                        <textarea name="address" class="form-control" rows="3"
+                                  placeholder="Enter full address (street, city, state, zip)"></textarea>
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i>
+                            Complete address helps with verification
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-dollar-sign"></i>
+                        Financial Information
+                    </h4>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-wallet"></i>
+                            Initial Balance
+                            <span class="required">*</span>
+                        </label>
+                        <div class="balance-group">
+                            <input type="number" name="balance" class="form-control"
+                                   placeholder="0.00" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i>
+                            Starting balance for the customer account
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-section">
+                    <button type="submit" class="btn-create" id="submitBtn">
+                        <span class="normal-state">
+                            <i class="fas fa-user-plus"></i>
+                            Create Customer
+                        </span>
+                        <span class="loading-state">
+                            <div class="spinner"></div>
+                            Creating Account...
+                        </span>
+                    </button>
+                    <div class="mt-3 text-muted">
+                        <small>
+                            <i class="fas fa-shield-alt me-2"></i>
+                            All customer data is encrypted and secure
+                        </small>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('emailInput');
+    const usernamePreview = document.getElementById('usernamePreview');
+    const submitBtn = document.getElementById('submitBtn');
+    const form = document.getElementById('customerForm');
+
+    // Username preview functionality
+    emailInput.addEventListener('input', function() {
+        const email = this.value.trim();
+        if (email && email.includes('@')) {
+            const username = email.split('@')[0];
+            usernamePreview.textContent = username + 'XXXX (XXXX = random code)';
+            usernamePreview.classList.add('has-data');
+        } else {
+            usernamePreview.textContent = 'Enter an email address to see the generated username';
+            usernamePreview.classList.remove('has-data');
+        }
+    });
+
+    // Form submission with loading state
+    form.addEventListener('submit', function(e) {
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+
+        // Re-enable button after 10 seconds as fallback
+        setTimeout(() => {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+        }, 10000);
+    });
+
+    // Form validation enhancement
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                const feedback = this.parentNode.querySelector('.invalid-feedback');
+                if (feedback) feedback.remove();
+            }
+        });
+
+        input.addEventListener('invalid', function(e) {
+            e.preventDefault();
+            this.classList.add('is-invalid');
+
+            // Remove existing feedback
+            const existingFeedback = this.parentNode.querySelector('.invalid-feedback');
+            if (existingFeedback) existingFeedback.remove();
+
+            // Add new feedback
+            const feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback';
+            feedback.textContent = this.validationMessage;
+            this.parentNode.appendChild(feedback);
+        });
+    });
+});
+</script>
+
 {% endblock %}

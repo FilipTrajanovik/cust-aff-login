@@ -6,12 +6,16 @@
     <title>My Wallets</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
-            background: #0f2027;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: white;
             min-height: 100vh;
-            font-family: Arial, serif
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         #wrapper {
@@ -19,82 +23,676 @@
             min-height: 100vh;
         }
 
+        /* Enhanced Sidebar (consistent with dashboard) */
         #sidebar-wrapper {
-            min-width: 250px;
-            background-color: #111;
-            padding-top: 20px;
+            min-width: 280px;
+            max-width: 280px;
+            background: linear-gradient(180deg, #111 0%, #1a1a1a 100%);
             height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+            border-right: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .sidebar-heading {
+            font-size: 1.3rem;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .sidebar-heading img {
+            filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-brand {
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .list-group {
+            padding: 1rem 0;
+        }
+
+        .list-group-item {
+            border: none;
+            background: transparent !important;
+            color: #ccc;
+            padding: 1rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .list-group-item:hover {
-            background-color: #222;
+            background: rgba(255, 215, 0, 0.1) !important;
+            color: #ffd700;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
         }
 
+        .list-group-item.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2)) !important;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .list-group-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.2) !important;
+            color: #ff6b6b !important;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
         #page-content-wrapper {
             flex: 1;
-            padding: 30px;
+            margin-left: 280px;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(44, 83, 100, 0.8));
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* Portfolio Overview */
+        .portfolio-overview {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: rgba(255, 215, 0, 0.6);
+            margin-bottom: 1rem;
+        }
+
+        /* Wallet Cards */
+        .wallets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
         }
 
         .wallet-card {
-            background-color: #222;
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--wallet-color, #ffd700);
+        }
+
+        .wallet-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        /* Crypto-specific colors */
+        .wallet-card.bitcoin {
+            --wallet-color: #f7931a;
+        }
+
+        .wallet-card.ethereum {
+            --wallet-color: #627eea;
+        }
+
+        .wallet-card.ripple {
+            --wallet-color: #23292f;
+        }
+
+        .wallet-card.stellar {
+            --wallet-color: #14b6e7;
+        }
+
+        .wallet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .crypto-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .crypto-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--wallet-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .crypto-details h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .crypto-symbol {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .wallet-status {
+            text-align: right;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .wallet-balances {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .balance-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .balance-label {
+            font-size: 0.85rem;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .balance-crypto {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--wallet-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .balance-usd {
+            font-size: 1.1rem;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .wallet-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
             border-radius: 10px;
-            margin-bottom: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+        }
+
+        .btn-receive {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-convert {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: rgba(255, 215, 0, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        /* Messages */
+        .alert {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.2));
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 15px;
+            color: #20c997;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.2));
+            border-color: rgba(40, 167, 69, 0.3);
+            color: #20c997;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 87, 34, 0.2));
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #ffd700;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.2), rgba(0, 123, 255, 0.2));
+            border-color: rgba(23, 162, 184, 0.3);
+            color: #17a2b8;
+        }
+
+        /* Mobile Responsiveness */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: rgba(255, 215, 0, 0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            #sidebar-wrapper {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            #sidebar-wrapper.show {
+                transform: translateX(0);
+            }
+
+            #page-content-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .wallets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #page-content-wrapper {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-header, .portfolio-overview {
+                padding: 1.5rem;
+            }
+
+            .overview-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .wallet-balances {
+                grid-template-columns: 1fr;
+            }
+
+            .wallet-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
 
-<div class="d-flex" id="wrapper">
-    <div class="bg-dark" id="sidebar-wrapper">
-        <div class="sidebar-heading text-white text-center">
-            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="asd"><br>Trump Finance
+    <div class="d-flex" id="wrapper">
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="Logo">
+                <div class="sidebar-brand">Trump Finance</div>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'crypto_home' %}" class="list-group-item">
+                    <i class="fas fa-home nav-icon"></i>
+                    Dashboard
+                </a>
+                <a href="{% url 'display_wallets' %}" class="list-group-item active">
+                    <i class="fas fa-wallet nav-icon"></i>
+                    Wallets
+                </a>
+                <a href="{% url 'crypto_profile' %}" class="list-group-item">
+                    <i class="fas fa-user nav-icon"></i>
+                    Profile
+                </a>
+                <a href="{% url 'crypto_convert' %}" class="list-group-item">
+                    <i class="fas fa-exchange-alt nav-icon"></i>
+                    Convert
+                </a>
+                <a href="{% url 'crypto_transfer' %}" class="list-group-item">
+                    <i class="fas fa-paper-plane nav-icon"></i>
+                    Transfer
+                </a>
+                <a href="{% url 'crypto_home' %}" class="list-group-item">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    Live Prices
+                </a>
+                <a href="{% url 'crypto_news' %}" class="list-group-item">
+                    <i class="fas fa-newspaper nav-icon"></i>
+                    News
+                </a>
+                <div style="margin-top: auto; padding-top: 2rem;">
+                    <a href="{% url 'logout' %}" class="list-group-item text-danger">
+                        <i class="fas fa-sign-out-alt nav-icon"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="list-group list-group-flush text-white">
-            <a href="{% url 'crypto_home' %}" class="list-group-item list-group-item-action bg-dark text-white">🏠
-                Dashboard</a>
-            <a href="{% url 'display_wallets' %}" class="list-group-item list-group-item-action bg-dark text-white">👛
-                Wallets</a>
-            <a href="{% url 'crypto_profile' %}" class="list-group-item list-group-item-action bg-dark text-white">👤
-                Profile</a>
-            <a href="{% url 'crypto_convert' %}" class="list-group-item list-group-item-action bg-dark text-white">🔄
-                Convert</a>
-            <a href="{% url 'crypto_transfer' %}" class="list-group-item list-group-item-action bg-dark text-white">💸
-                Transfer</a>
-            <a href="{% url 'crypto_profile' %}" class="list-group-item list-group-item-action bg-dark text-white">👤
-                Profile</a>
-            <a href="{% url 'crypto_news' %}" class="list-group-item list-group-item-action bg-dark text-white active">🧠
-                News</a>
 
-            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action bg-dark text-danger">🚪 Logout</a>
-        </div>
-    </div>
-
-    <div id="page-content-wrapper">
-        <div class="container">
+        <div id="page-content-wrapper">
+            <!-- Messages -->
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-check-circle me-2"></i>
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
 
-            <h2>👛 My Wallets</h2>
-            <div class="row">
-                {% for wallet in wallets %}
-                    <div class="col-md-6">
-                        <div class="wallet-card">
-                            <h5>{{ wallet.cryptocurrency.name }}</h5>
-                            <p>Balance: {{ wallet.balance }}</p>
-                            <p>Estimated Value: ${{ wallet.estimated_value|floatformat:4 }}</p>
-                        </div>
-                    </div>
-                {% endfor %}
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-wallet me-3"></i>My Crypto Wallets
+                </h1>
+                <p class="page-subtitle">Manage your cryptocurrency portfolio and track your digital assets</p>
             </div>
+
+            <div class="portfolio-overview">
+                <div class="overview-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-coins stat-icon"></i>
+                        <div class="stat-value" id="totalValue">${{ total_portfolio_value|floatformat:2|default:"0.00" }}</div>
+                        <div class="stat-label">Total Portfolio Value</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line stat-icon"></i>
+                        <div class="stat-value">{{ wallets|length }}</div>
+                        <div class="stat-label">Active Wallets</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-history stat-icon"></i>
+                        <div class="stat-value" id="lastUpdate">--:--</div>
+                        <div class="stat-label">Last Updated</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shield-alt stat-icon"></i>
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Security Score</div>
+                    </div>
+                </div>
+            </div>
+
+            {% if wallets %}
+                <div class="wallets-grid">
+                    {% for wallet in wallets %}
+                        <div class="wallet-card {% if wallet.cryptocurrency.name|lower == 'bitcoin' %}bitcoin{% elif wallet.cryptocurrency.name|lower == 'ethereum' %}ethereum{% elif wallet.cryptocurrency.name|lower == 'ripple' %}ripple{% elif wallet.cryptocurrency.name|lower == 'stellar' %}stellar{% endif %}">
+                            <div class="wallet-header">
+                                <div class="crypto-info">
+                                    <div class="crypto-icon">
+                                        {% if wallet.cryptocurrency.name|lower == 'bitcoin' %}
+                                            <i class="fab fa-bitcoin"></i>
+                                        {% elif wallet.cryptocurrency.name|lower == 'ethereum' %}
+                                            <i class="fab fa-ethereum"></i>
+                                        {% else %}
+                                            <i class="fas fa-coins"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="crypto-details">
+                                        <h3>{{ wallet.cryptocurrency.name }}</h3>
+                                        <p class="crypto-symbol">{{ wallet.cryptocurrency.symbol|default:wallet.cryptocurrency.name|upper|truncatechars:4 }}</p>
+                                    </div>
+                                </div>
+                                <div class="wallet-status">
+                                    <span class="status-badge">Active</span>
+                                </div>
+                            </div>
+
+                            <div class="wallet-balances">
+                                <div class="balance-item">
+                                    <div class="balance-label">Crypto Balance</div>
+                                    <div class="balance-crypto">{{ wallet.balance|floatformat:6 }}</div>
+                                </div>
+                                <div class="balance-item">
+                                    <div class="balance-label">USD Value</div>
+                                    <div class="balance-usd">${{ wallet.estimated_value|floatformat:2 }}</div>
+                                </div>
+                            </div>
+
+                            <div class="wallet-actions">
+                                <a href="{% url 'crypto_transfer' %}" class="action-btn btn-send">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Send
+                                </a>
+                                <a href="#" class="action-btn btn-receive" onclick="showReceiveModal('{{ wallet.cryptocurrency.name }}')">
+                                    <i class="fas fa-qrcode"></i>
+                                    Receive
+                                </a>
+                                <a href="{% url 'crypto_convert' %}" class="action-btn btn-convert">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    Convert
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-wallet"></i>
+                    <h3>No Wallets Found</h3>
+                    <p>You don't have any cryptocurrency wallets yet. Start by receiving some crypto or converting your balance.</p>
+                    <a href="{% url 'crypto_convert' %}" class="action-btn btn-convert" style="max-width: 200px; margin: 0 auto;">
+                        <i class="fas fa-plus"></i>
+                        Get Started
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar-wrapper').classList.toggle('show');
+        }
+
+        function showReceiveModal(cryptoName) {
+            alert(`Receive ${cryptoName} functionality coming soon!`);
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent =
+                now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLastUpdateTime();
+
+            setInterval(updateLastUpdateTime, 60000);
+        });
+
+        let totalValue = 0;
+        {% for wallet in wallets %}
+            totalValue += {{ wallet.estimated_value|default:0 }};
+        {% endfor %}
+
+        if (document.getElementById('totalValue')) {
+            document.getElementById('totalValue').textContent = '$' + totalValue.toFixed(2);
+        }
+    </script>
 
 </body>
 </html>

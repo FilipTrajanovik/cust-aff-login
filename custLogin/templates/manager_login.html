@@ -1,13 +1,576 @@
-<!-- custLogin/templates/manager_login.html -->
 {% extends "base.html" %}
 {% block title %}Manager Login{% endblock %}
 {% block content %}
-<h2>Manager Login</h2>
-<form method="post">
-  {% csrf_token %}
-  <input class="form-control mb-2" type="text" name="username" placeholder="Username" required>
-  <input class="form-control mb-2" type="password" name="password" placeholder="Password" required>
-  <button class="btn btn-primary" type="submit">Login</button>
-  {% if error %}<div class="text-danger mt-2">{{ error }}</div>{% endif %}
-</form>
+
+<style>
+    .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 25px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        overflow: hidden;
+        max-width: 450px;
+        width: 100%;
+        position: relative;
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: white;
+        padding: 3rem 2rem 2rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .login-icon {
+        width: 100px;
+        height: 100px;
+        background: rgba(255,215,0,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem auto;
+        border: 3px solid rgba(255,215,0,0.3);
+        position: relative;
+        z-index: 1;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,215,0,0.4); }
+        50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255,215,0,0); }
+    }
+
+    .login-icon i {
+        font-size: 2.5rem;
+        color: #ffd700;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+    }
+
+    .login-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        background: linear-gradient(45deg, #ffd700, #ff6b35);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        z-index: 1;
+    }
+
+    .login-subtitle {
+        opacity: 0.9;
+        font-size: 1rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .login-body {
+        padding: 2.5rem 2rem;
+        background: white;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+
+    .form-label i {
+        margin-right: 0.75rem;
+        width: 20px;
+        color: #1a1a2e;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 1rem 1rem 1rem 3rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        background: #f8f9fa;
+        position: relative;
+    }
+
+    .form-control:focus {
+        border-color: #ffd700;
+        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+        background: white;
+        transform: translateY(-2px);
+        outline: none;
+    }
+
+    .form-control::placeholder {
+        color: #adb5bd;
+        font-style: italic;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+
+    .form-group:focus-within .input-icon {
+        color: #ffd700;
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        z-index: 2;
+    }
+
+    .password-toggle:hover {
+        color: #ffd700;
+        transform: translateY(-50%) scale(1.2);
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #1a1a2e 0%, #ffd700 100%);
+        border: none;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-login::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-login:hover::before {
+        left: 100%;
+    }
+
+    .btn-login:hover {
+        background: linear-gradient(135deg, #ffd700 0%, #1a1a2e 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(26, 26, 46, 0.3);
+        color: white;
+    }
+
+    .btn-login:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-login.loading {
+        background: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .btn-login.loading::before {
+        display: none;
+    }
+
+    .loading-spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 0.5rem;
+    }
+
+    .btn-login.loading .loading-spinner {
+        display: inline-block;
+    }
+
+    .btn-login.loading .btn-text {
+        display: none;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .error-alert {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+        border: 1px solid #f1aeb5;
+        border-radius: 15px;
+        padding: 1rem;
+        margin-top: 1rem;
+        position: relative;
+        animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .error-alert::before {
+        content: '⚠️';
+        position: absolute;
+        top: -8px;
+        left: 15px;
+        background: white;
+        padding: 0 5px;
+        font-size: 1rem;
+    }
+
+    .error-text {
+        color: #721c24;
+        font-weight: 500;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .error-text i {
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .forgot-password {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .forgot-password a {
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .forgot-password a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        left: 50%;
+        background: #ffd700;
+        transition: all 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+        color: #ffd700;
+    }
+
+    .forgot-password a:hover::after {
+        width: 100%;
+        left: 0;
+    }
+
+    .security-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.5rem;
+        padding: 0.75rem;
+        background: rgba(40, 167, 69, 0.1);
+        border-radius: 10px;
+        color: #155724;
+        font-size: 0.85rem;
+    }
+
+    .security-badge i {
+        margin-right: 0.5rem;
+        color: #28a745;
+    }
+
+    .company-branding {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .company-logo {
+        font-size: 1.2rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #ffd700, #ff6b35);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @media (max-width: 768px) {
+        .login-container {
+            padding: 1rem;
+            min-height: 70vh;
+        }
+
+        .login-card {
+            margin: 0 1rem;
+        }
+
+        .login-header {
+            padding: 2rem 1rem 1.5rem 1rem;
+        }
+
+        .login-title {
+            font-size: 1.7rem;
+        }
+
+        .login-body {
+            padding: 2rem 1rem;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        .login-icon i {
+            font-size: 2rem;
+        }
+    }
+
+    /* Input validation styles */
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        background: rgba(220, 53, 69, 0.05);
+    }
+
+    .form-control.is-valid {
+        border-color: #28a745;
+        background: rgba(40, 167, 69, 0.05);
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <!-- Login Header -->
+        <div class="login-header">
+            <div class="login-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h1 class="login-title">Manager Portal</h1>
+            <p class="login-subtitle">Secure access to Trump Finance management system</p>
+        </div>
+
+        <!-- Login Body -->
+        <div class="login-body">
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i>
+                        Username
+                    </label>
+                    <div style="position: relative;">
+                        <i class="fas fa-user input-icon"></i>
+                        <input class="form-control" type="text" name="username" id="username"
+                               placeholder="Enter your username" required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div style="position: relative;">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input class="form-control" type="password" name="password" id="password"
+                               placeholder="Enter your password" required autocomplete="current-password">
+                        <i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <div class="loading-spinner"></div>
+                    <span class="btn-text">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Login to Dashboard
+                    </span>
+                    <span class="loading-text" style="display: none;">Authenticating...</span>
+                </button>
+
+                {% if error %}
+                <div class="error-alert">
+                    <p class="error-text">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Invalid credentials. Please check your username and password and try again.
+                    </p>
+                </div>
+                {% endif %}
+            </form>
+
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">
+                    <i class="fas fa-question-circle me-2"></i>
+                    Forgot your password?
+                </a>
+            </div>
+
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                Your connection is secured with SSL encryption
+            </div>
+
+            <div class="company-branding">
+                <div class="company-logo">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Trump Finance Management System
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Password Recovery</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please contact your system administrator to reset your password.</p>
+                <p class="text-muted">
+                    <i class="fas fa-envelope me-2"></i>
+                    Email: admin@trumpfinance.com
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('passwordToggle');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        passwordToggle.classList.remove('fa-eye');
+        passwordToggle.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        passwordToggle.classList.remove('fa-eye-slash');
+        passwordToggle.classList.add('fa-eye');
+    }
+}
+
+function showForgotPassword() {
+    const modal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+    modal.show();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+
+    // Form submission with loading state
+    form.addEventListener('submit', function(e) {
+        loginBtn.classList.add('loading');
+        loginBtn.disabled = true;
+
+        // Re-enable button after 10 seconds as fallback
+        setTimeout(() => {
+            loginBtn.classList.remove('loading');
+            loginBtn.disabled = false;
+        }, 10000);
+    });
+
+    // Input validation
+    [usernameInput, passwordInput].forEach(input => {
+        input.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+            }
+        });
+
+        input.addEventListener('blur', function() {
+            if (this.value.length === 0) {
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+
+    // Auto-focus on username field
+    usernameInput.focus();
+
+    // Enter key handling
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            form.submit();
+        }
+    });
+});
+</script>
+
 {% endblock %}

@@ -8,148 +8,808 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
         body {
-            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             min-height: 100vh;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         #wrapper {
             display: flex;
+            min-height: 100vh;
         }
 
+        /* Enhanced Sidebar (consistent with other pages) */
         #sidebar-wrapper {
-            min-width: 250px;
-            max-width: 250px;
-            background-color: #111;
-            padding-top: 20px;
+            min-width: 280px;
+            max-width: 280px;
+            background: linear-gradient(180deg, #111 0%, #1a1a1a 100%);
             height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+            border-right: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .sidebar-heading {
-            font-size: 1.5rem;
-            padding: 10px 20px;
+            font-size: 1.3rem;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .sidebar-heading img {
+            filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-brand {
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .list-group {
+            padding: 1rem 0;
+        }
+
+        .list-group-item {
+            border: none;
+            background: transparent !important;
+            color: #ccc;
+            padding: 1rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .list-group-item:hover {
-            background-color: #222;
+            background: rgba(255, 215, 0, 0.1) !important;
+            color: #ffd700;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
         }
 
+        .list-group-item.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2)) !important;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .list-group-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.2) !important;
+            color: #ff6b6b !important;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
         #page-content-wrapper {
             flex: 1;
-            padding: 30px;
+            margin-left: 280px;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(44, 83, 100, 0.8));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .form-container {
-            background-color: #1c1c1c;
-            border-radius: 10px;
-            padding: 25px;
+        .page-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .motivational-quote {
+            color: #ccc;
+            font-style: italic;
+            font-size: 1.1rem;
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        /* Convert Form */
+        .convert-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .convert-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            overflow: hidden;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .convert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, #ff6b35, #28a745, #007bff);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .convert-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 500px;
+        }
+
+        /* Left Info Panel */
+        .info-panel {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(32, 32, 32, 0.4));
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0.6;
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .convert-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem auto;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .info-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .info-description {
+            font-size: 1.1rem;
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .conversion-features {
+            text-align: left;
+            max-width: 300px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffd700;
+            font-size: 0.9rem;
+        }
+
+        /* Right Form Panel */
+        .form-panel {
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-label i {
+            color: #ffd700;
+            width: 20px;
         }
 
         .form-control, .form-select {
-            background-color: #222;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
             color: white;
-            border: none;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus, .form-select:focus {
-            background-color: #333;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ffd700;
+            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
             color: white;
+            transform: translateY(-2px);
+        }
+
+        .form-control::placeholder {
+            color: #ccc;
+            opacity: 0.8;
+        }
+
+        .form-select option {
+            background: #2c2c2c;
+            color: white;
+        }
+
+        .conversion-swap {
+            display: flex;
+            justify-content: center;
+            margin: -0.75rem 0 1rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .swap-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .swap-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #007bff);
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+        }
+
+        .conversion-rate {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #ffd700;
+            text-align: center;
+        }
+
+        .conversion-rate i {
+            margin-right: 0.5rem;
+        }
+
+        .btn-convert {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-convert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-convert:hover::before {
+            left: 100%;
+        }
+
+        .btn-convert:hover {
+            background: linear-gradient(135deg, #20c997, #28a745);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+
+        .btn-convert.loading {
+            background: #6c757d;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        .btn-convert.loading .loading-spinner {
+            display: inline-block;
+        }
+
+        .btn-convert.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Messages */
+        .alert {
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin-top: 2rem;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.2));
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #20c997;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(248, 81, 102, 0.2));
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #ff6b6b;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 87, 34, 0.2));
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffd700;
+        }
+
+        /* Mobile Responsiveness */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: rgba(255, 215, 0, 0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            #sidebar-wrapper {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            #sidebar-wrapper.show {
+                transform: translateX(0);
+            }
+
+            #page-content-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .convert-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .info-panel {
+                padding: 2rem;
+            }
+
+            .form-panel {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #page-content-wrapper {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+            }
+
+            .convert-card {
+                margin: 0 1rem;
+            }
+
+            .info-title {
+                font-size: 1.5rem;
+            }
+
+            .conversion-features {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
 
-<div class="d-flex" id="wrapper">
-    <!-- Sidebar -->
-    <div class="bg-dark" id="sidebar-wrapper">
-        <div class="sidebar-heading text-white text-center">
-            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="Logo"><br>
-            Trump Finance
+    <div class="d-flex" id="wrapper">
+        <!-- Enhanced Sidebar -->
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <img src="{% static 'images/beloLogo-removebg-preview.png' %}" height="40" alt="Logo">
+                <div class="sidebar-brand">Trump Finance</div>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'crypto_home' %}" class="list-group-item">
+                    <i class="fas fa-home nav-icon"></i>
+                    Dashboard
+                </a>
+                <a href="{% url 'display_wallets' %}" class="list-group-item">
+                    <i class="fas fa-wallet nav-icon"></i>
+                    Wallets
+                </a>
+                <a href="{% url 'crypto_profile' %}" class="list-group-item">
+                    <i class="fas fa-user nav-icon"></i>
+                    Profile
+                </a>
+                <a href="{% url 'crypto_convert' %}" class="list-group-item active">
+                    <i class="fas fa-exchange-alt nav-icon"></i>
+                    Convert
+                </a>
+                <a href="{% url 'crypto_transfer' %}" class="list-group-item">
+                    <i class="fas fa-paper-plane nav-icon"></i>
+                    Transfer
+                </a>
+                <a href="{% url 'crypto_home' %}" class="list-group-item">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    Live Prices
+                </a>
+                <a href="{% url 'crypto_news' %}" class="list-group-item">
+                    <i class="fas fa-newspaper nav-icon"></i>
+                    News
+                </a>
+                <div style="margin-top: auto; padding-top: 2rem;">
+                    <a href="{% url 'logout' %}" class="list-group-item text-danger">
+                        <i class="fas fa-sign-out-alt nav-icon"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="list-group list-group-flush text-white">
-            <a href="{% url 'crypto_home' %}" class="list-group-item list-group-item-action bg-dark text-white">🏠
-                Dashboard</a>
-            <a href="{% url 'display_wallets' %}" class="list-group-item list-group-item-action bg-dark text-white">👛
-                Wallets</a>
-            <a href="{% url 'crypto_profile' %}" class="list-group-item list-group-item-action bg-dark text-white">👤
-                Profile</a>
-            <a href="{% url 'crypto_transfer' %}" class="list-group-item list-group-item-action bg-dark text-white">💸
-                Transfer</a>
-            <a href="{% url 'crypto_convert' %}"
-               class="list-group-item list-group-item-action bg-dark text-white active">🔄 Convert</a>
-            <a href="{% url 'crypto_news' %}" class="list-group-item list-group-item-action bg-dark text-white active">🧠
-                News</a>
 
-            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action bg-dark text-danger">🚪 Logout</a>
-        </div>
-    </div>
-
-    <!-- Page Content -->
-    <div id="page-content-wrapper">
-        <div class="container mt-5">
-            <!-- Page title -->
-            <h2 class="text-center mb-1">🔄 Convert Crypto</h2>
-
-            <!-- Motivational Quote -->
-            <div class="text-center text-light mb-4 fst-italic">
-                “Shift value, shape your future.”
+        <!-- Enhanced Page Content -->
+        <div id="page-content-wrapper">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-exchange-alt me-3"></i>Convert Cryptocurrency
+                </h1>
+                <p class="motivational-quote">"Shift value, shape your future."</p>
             </div>
 
-            <!-- Conversion Form Card (Split Half) -->
-            <div class="d-flex justify-content-center">
-                <div class="card w-100"
-                     style="max-width: 700px; background-color: #1c1c1c; border: none; border-radius: 15px;">
-                    <div class="row g-0">
-                        <!-- Left Text Half -->
-                        <div class="col-md-6 d-flex flex-column justify-content-center align-items-center text-white p-4"
-                             style="background-color: #202020; border-top-left-radius: 15px; border-bottom-left-radius: 15px;">
-                            <h5 class="mb-3">💱 Ready to convert?</h5>
-                            <p class="text-center">Select the currencies you want to exchange and enter the amount.
-                                We'll handle the math for you.</p>
+            <!-- Convert Form Container -->
+            <div class="convert-container">
+                <div class="convert-card">
+                    <div class="convert-layout">
+                        <!-- Left Info Panel -->
+                        <div class="info-panel">
+                            <div class="info-content">
+                                <div class="convert-icon">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                                <h3 class="info-title">Ready to Convert?</h3>
+                                <p class="info-description">
+                                    Select the cryptocurrencies you want to exchange and enter the amount.
+                                    We'll handle the calculations and execute the conversion instantly.
+                                </p>
+
+                                <div class="conversion-features">
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-bolt"></i>
+                                        </div>
+                                        <span>Instant Conversion</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <span>Real-time Rates</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </div>
+                                        <span>Secure & Encrypted</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-percentage"></i>
+                                        </div>
+                                        <span>Low Fees (10%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Right Form Half -->
-                        <div class="col-md-6 p-4">
-                            <form method="POST">
+                        <!-- Right Form Panel -->
+                        <div class="form-panel">
+                            <div class="form-header">
+                                <h3 class="form-title">Currency Conversion</h3>
+                                <p class="form-subtitle">Exchange your crypto assets seamlessly</p>
+                            </div>
+
+                            <form method="POST" id="convertForm">
                                 {% csrf_token %}
-                                <div class="mb-3">
-                                    <label for="from_crypto" class="form-label text-white">From Cryptocurrency:</label>
+
+                                <div class="form-group">
+                                    <label for="from_crypto" class="form-label">
+                                        <i class="fas fa-coins"></i>
+                                        From Cryptocurrency
+                                    </label>
                                     {{ form.from_crypto }}
                                 </div>
-                                <div class="mb-3">
-                                    <label for="to_crypto" class="form-label text-white">To Cryptocurrency:</label>
+
+                                <div class="conversion-swap">
+                                    <button type="button" class="swap-btn" onclick="swapCurrencies()">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </button>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="to_crypto" class="form-label">
+                                        <i class="fas fa-arrow-right"></i>
+                                        To Cryptocurrency
+                                    </label>
                                     {{ form.to_crypto }}
                                 </div>
-                                <div class="mb-4">
-                                    <label for="amount" class="form-label text-white">Amount to Convert:</label>
+
+                                <div class="conversion-rate" id="conversionRate" style="display: none;">
+                                    <i class="fas fa-calculator"></i>
+                                    <span id="rateText">Select currencies to see conversion rate</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="amount" class="form-label">
+                                        <i class="fas fa-calculator"></i>
+                                        Amount to Convert
+                                    </label>
                                     {{ form.amount }}
                                 </div>
-                                <button type="submit" class="btn btn-success w-100">🔁 Convert</button>
+
+                                <button type="submit" class="btn-convert" id="convertBtn">
+                                    <div class="loading-spinner"></div>
+                                    <span class="btn-text">
+                                        <i class="fas fa-sync-alt me-2"></i>
+                                        Execute Conversion
+                                    </span>
+                                    <span class="loading-text" style="display: none;">Converting...</span>
+                                </button>
                             </form>
                         </div>
                     </div>
+
+                    <!-- Messages -->
+                    {% if messages %}
+                        <div style="padding: 0 2rem 2rem 2rem;">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-
-            <!-- Messages -->
-            {% if messages %}
-                <div class="mt-4" style="max-width: 700px; margin: auto;">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
         </div>
     </div>
 
-</div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar-wrapper').classList.toggle('show');
+        }
+
+        // Swap currencies
+        function swapCurrencies() {
+            const fromSelect = document.querySelector('select[name="from_crypto"]');
+            const toSelect = document.querySelector('select[name="to_crypto"]');
+
+            const fromValue = fromSelect.value;
+            const toValue = toSelect.value;
+
+            fromSelect.value = toValue;
+            toSelect.value = fromValue;
+
+            updateConversionRate();
+        }
+
+        // Update conversion rate (placeholder function)
+        function updateConversionRate() {
+            const fromSelect = document.querySelector('select[name="from_crypto"]');
+            const toSelect = document.querySelector('select[name="to_crypto"]');
+            const rateElement = document.getElementById('conversionRate');
+            const rateText = document.getElementById('rateText');
+
+            if (fromSelect.value && toSelect.value && fromSelect.value !== toSelect.value) {
+                const fromCrypto = fromSelect.options[fromSelect.selectedIndex].text;
+                const toCrypto = toSelect.options[toSelect.selectedIndex].text;
+
+                rateElement.style.display = 'block';
+                rateText.textContent = `1 ${fromCrypto} = ~0.95 ${toCrypto} (after 10% fee)`;
+            } else {
+                rateElement.style.display = 'none';
+            }
+        }
+
+        // Form submission with loading state
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('convertForm');
+            const convertBtn = document.getElementById('convertBtn');
+            const fromSelect = document.querySelector('select[name="from_crypto"]');
+            const toSelect = document.querySelector('select[name="to_crypto"]');
+
+            // Form submission handling
+            form.addEventListener('submit', function(e) {
+                convertBtn.classList.add('loading');
+                convertBtn.disabled = true;
+
+                // Re-enable button after 10 seconds as fallback
+                setTimeout(() => {
+                    convertBtn.classList.remove('loading');
+                    convertBtn.disabled = false;
+                }, 10000);
+            });
+
+            // Update conversion rate when selections change
+            fromSelect.addEventListener('change', updateConversionRate);
+            toSelect.addEventListener('change', updateConversionRate);
+
+            // Form validation
+            const inputs = form.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.checkValidity()) {
+                        this.style.borderColor = 'rgba(40, 167, 69, 0.5)';
+                    }
+                });
+
+                input.addEventListener('invalid', function(e) {
+                    e.preventDefault();
+                    this.style.borderColor = 'rgba(220, 53, 69, 0.5)';
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>

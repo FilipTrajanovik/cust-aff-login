@@ -1,12 +1,313 @@
+
 {% extends "base.html" %}
 {% block title %}Edit Customer{% endblock %}
 {% block content %}
-<h2>Edit Customer - {{ customer.username }}</h2>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-success">Save Changes</button>
-    <a class="btn btn-secondary" href="{% url 'manager_dashboard' %}">Cancel</a>
-</form>
+<style>
+    .edit-form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .form-header h2 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .form-header .customer-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1rem auto;
+        border: 3px solid rgba(255,255,255,0.3);
+    }
+
+    .form-body {
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-label i {
+        margin-right: 0.5rem;
+        width: 20px;
+        color: #667eea;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .balance-input {
+        position: relative;
+    }
+
+    .balance-input::before {
+        content: '$';
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.1rem;
+        z-index: 1;
+    }
+
+    .balance-input .form-control {
+        padding-left: 2rem;
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .checkbox-container {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .checkbox-container:hover {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.05);
+    }
+
+    .form-check-input {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.75rem;
+        border: 2px solid #dee2e6;
+        border-radius: 6px;
+    }
+
+    .form-check-input:checked {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .form-check-label {
+        font-weight: 600;
+        color: #495057;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+        margin-top: 2rem;
+    }
+
+    .btn-modern {
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        min-width: 140px;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(135deg, #218838, #1e9b88);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    .btn-cancel {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background: linear-gradient(135deg, #5a6268, #6c757d);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        color: white;
+    }
+
+    .password-info {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #856404;
+    }
+
+    @media (max-width: 768px) {
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .form-body {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="edit-form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <div class="customer-avatar">
+                <i class="fas fa-user-edit"></i>
+            </div>
+            <h2>Edit Customer</h2>
+            <p class="mb-0 opacity-75">{{ customer.username }}</p>
+        </div>
+
+        <div class="form-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i>
+                        Username
+                    </label>
+                    <input type="text" name="username" class="form-control"
+                           value="{{ form.username.value|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" name="email" class="form-control"
+                           value="{{ form.email.value|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-phone"></i>
+                        Phone Number
+                    </label>
+                    <input type="tel" name="phone" class="form-control"
+                           value="{{ form.phone.value|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-dollar-sign"></i>
+                        Account Balance
+                    </label>
+                    <div class="balance-input">
+                        <input type="number" name="balance" class="form-control"
+                               value="{{ form.balance.value|default:'' }}" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Address
+                    </label>
+                    <textarea name="address" class="form-control" rows="3"
+                              placeholder="Enter full address">{{ form.address.value|default:'' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-key"></i>
+                        Password
+                    </label>
+                    <input type="text" name="raw_password" class="form-control"
+                           value="{{ form.raw_password.value|default:'' }}" required>
+                    <div class="password-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        This password will be visible to you but encrypted in the system.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Cashout Settings
+                    </label>
+                    <div class="checkbox-container">
+                        <div class="form-check">
+                            <input type="checkbox" name="can_cashout" class="form-check-input"
+                                   id="can_cashout" {% if form.can_cashout.value %}checked{% endif %}>
+                            <label class="form-check-label" for="can_cashout">
+                                <i class="fas fa-check-circle me-2 text-success"></i>
+                                Allow this customer to cash out funds
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn-modern btn-save">
+                        <i class="fas fa-save me-2"></i>
+                        Save Changes
+                    </button>
+                    <a href="{% url 'manager_dashboard' %}" class="btn-modern btn-cancel">
+                        <i class="fas fa-times me-2"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
 {% endblock %}
