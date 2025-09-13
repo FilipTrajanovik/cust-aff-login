@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Locked - Trump Finance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .locked-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .locked-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="25" cy="25" r="0.3" fill="rgba(255,255,255,0.02)"/><circle cx="75" cy="75" r="0.4" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            z-index: -1;
+        }
+
+        .locked-card {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.15), rgba(108, 117, 125, 0.15));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(220, 53, 69, 0.3);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(220, 53, 69, 0.2);
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .locked-header {
+            background: linear-gradient(135deg, #dc3545 0%, #6c757d 100%);
+            color: white;
+            padding: 3rem 2rem 2rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .locked-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .locked-icon {
+            width: 120px;
+            height: 120px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem auto;
+            border: 4px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+            animation: lockPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes lockPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 25px rgba(255,255,255,0);
+            }
+        }
+
+        .locked-icon i {
+            font-size: 3.5rem;
+            color: white;
+            animation: lockShake 0.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes lockShake {
+            0% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
+        }
+
+        .locked-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 0 0 1rem 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .locked-subtitle {
+            opacity: 0.9;
+            font-size: 1.2rem;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .locked-body {
+            padding: 3rem 2rem;
+            background: rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .account-info {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .account-username {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .lock-message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .reason-section {
+            margin: 2rem 0;
+        }
+
+        .reason-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ccc;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .reason-text {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #fff;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(32, 201, 151, 0.15));
+            border: 2px solid rgba(40, 167, 69, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .contact-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #20c997;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-method:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .contact-method i {
+            font-size: 1.2rem;
+            color: #20c997;
+            width: 20px;
+        }
+
+        .contact-text {
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+
+        .timestamp-info {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, rgba(108, 117, 125, 0.3), rgba(52, 58, 64, 0.3));
+            border: 2px solid rgba(108, 117, 125, 0.5);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, rgba(108, 117, 125, 0.5), rgba(52, 58, 64, 0.5));
+            border-color: rgba(108, 117, 125, 0.7);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Floating particles animation */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 0.6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .locked-container {
+                padding: 1rem;
+            }
+
+            .locked-card {
+                margin: 0;
+            }
+
+            .locked-header {
+                padding: 2rem 1.5rem 1.5rem 1.5rem;
+            }
+
+            .locked-title {
+                font-size: 2.2rem;
+            }
+
+            .locked-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .locked-icon {
+                width: 100px;
+                height: 100px;
+            }
+
+            .locked-icon i {
+                font-size: 2.8rem;
+            }
+
+            .account-info, .contact-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle" style="left: 10%; top: 20%; width: 4px; height: 4px; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 80%; top: 30%; width: 6px; height: 6px; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 60%; top: 70%; width: 3px; height: 3px; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; top: 80%; width: 5px; height: 5px; animation-delay: 3s;"></div>
+    </div>
+
+    <div class="locked-container">
+        <div class="locked-card">
+            <!-- Header -->
+            <div class="locked-header">
+                <div class="locked-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h1 class="locked-title">Account Locked</h1>
+                <p class="locked-subtitle">Access to your account has been temporarily restricted</p>
+            </div>
+
+            <!-- Body -->
+            <div class="locked-body">
+                <div class="account-info">
+                    <div class="account-username">
+                        <i class="fas fa-user-circle"></i>
+                        {{ customer.username }}
+                    </div>
+                </div>
+
+                <div class="lock-message">
+                    <i class="fas fa-exclamation-triangle me-2" style="color: #ffc107;"></i>
+                    Your account access has been temporarily suspended. This restriction was put in place for security reasons or administrative purposes.
+                </div>
+
+                {% if locked_reason %}
+                <div class="reason-section">
+                    <div class="reason-label">
+                        <i class="fas fa-info-circle"></i>
+                        Reason for Lock
+                    </div>
+                    <div class="reason-text">
+                        {{ locked_reason }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="contact-section">
+                    <div class="contact-title">
+                        <i class="fas fa-headset"></i>
+                        Contact Your Account Manager
+                    </div>
+                    <p style="color: #e0e0e0; margin-bottom: 1rem;">
+                        To resolve this issue and restore access to your account, please contact your dedicated account manager immediately.
+                    </p>
+
+
+                </div>
+
+                {% if locked_at %}
+                <div class="timestamp-info">
+                    <i class="fas fa-clock me-2"></i>
+                    Account locked on {{ locked_at }}
+                </div>
+                {% endif %}
+
+                <a href="{% url 'customer_login' %}" class="back-button">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

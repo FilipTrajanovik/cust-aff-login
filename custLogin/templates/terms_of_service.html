@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terms of Service & Privacy Policy - Trump Finance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .navbar-brand:hover {
+            color: #ffd700;
+        }
+
+        .legal-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .legal-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .legal-main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .legal-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .legal-document {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        .legal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .disclaimer-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 87, 34, 0.2));
+            border: 2px solid rgba(255, 193, 7, 0.5);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .disclaimer-box h4 {
+            color: #ffc107;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .disclaimer-box p {
+            color: white;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .legal-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .legal-section h3 {
+            color: #ffd700;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 0.3rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .legal-section p, .legal-section li {
+            color: #ccc;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .legal-section ul {
+            padding-left: 1.2rem;
+        }
+
+        .effective-date {
+            text-align: center;
+            color: #aaa;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%);
+            border-top: 2px solid rgba(255, 215, 0, 0.3);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #ccc;
+            margin: 0;
+        }
+
+        .back-link {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 968px) {
+            .legal-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .legal-document {
+                padding: 1.5rem;
+            }
+
+            .legal-main-title {
+                font-size: 2rem;
+            }
+
+            .legal-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .legal-container {
+                padding: 1rem;
+            }
+
+            .legal-header {
+                padding: 1.5rem;
+            }
+
+            .legal-main-title {
+                font-size: 1.8rem;
+            }
+
+            .legal-document {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="javascript:history.back()">
+                <i class="fas fa-chart-line"></i>
+                Trump Finance
+            </a>
+        </div>
+    </nav>
+
+    <div class="legal-container">
+        <a href="javascript:history.back()" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+
+        <div class="legal-header">
+            <h1 class="legal-main-title">Legal Information</h1>
+            <p class="mb-0" style="color: #ccc;">Terms of Service & Privacy Policy</p>
+            <div class="effective-date">
+                Effective Date: January 1, 2025
+            </div>
+        </div>
+
+        <div class="legal-columns">
+            <!-- TERMS OF SERVICE COLUMN -->
+            <div class="legal-document">
+                <h2 class="legal-title">Terms of Service</h2>
+
+                <div class="disclaimer-box">
+                    <h4>IMPORTANT EDUCATIONAL DISCLAIMER</h4>
+                    <p><strong>This platform is for educational and demonstration purposes only.</strong> Trump Finance is a simulated financial platform created for learning purposes. All names, companies, transactions, balances, and financial data displayed are fictional and for educational use only.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>1. Platform Purpose</h3>
+                    <p>Trump Finance is an educational demonstration platform designed to showcase web application development and user interface design. This platform simulates cryptocurrency trading and financial management features purely for educational purposes.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>2. No Real Financial Services</h3>
+                    <p>By using this platform, you acknowledge and agree that:</p>
+                    <ul>
+                        <li>No real cryptocurrencies, money, or financial instruments are handled</li>
+                        <li>All balances and transactions are simulated data</li>
+                        <li>No actual financial advice is provided</li>
+                        <li>The platform is not licensed as a financial service provider</li>
+                        <li>No real economic value is created or transferred</li>
+                    </ul>
+                </div>
+
+                <div class="legal-section">
+                    <h3>3. Educational Use Only</h3>
+                    <p>This platform is intended solely for:</p>
+                    <ul>
+                        <li>Educational demonstration of web application features</li>
+                        <li>Learning about user interface design</li>
+                        <li>Understanding financial application workflows</li>
+                        <li>Portfolio and project demonstration purposes</li>
+                    </ul>
+                </div>
+
+                <div class="legal-section">
+                    <h3>4. User Responsibilities</h3>
+                    <p>Users agree to:</p>
+                    <ul>
+                        <li>Use the platform solely for educational purposes</li>
+                        <li>Not attempt to exploit or abuse the system</li>
+                        <li>Understand that all data is fictional</li>
+                        <li>Not expect any real financial returns or services</li>
+                    </ul>
+                </div>
+
+                <div class="legal-section">
+                    <h3>5. Limitation of Liability</h3>
+                    <p>The creators of this educational platform are not liable for any misunderstandings regarding the fictional nature of the services displayed. This platform does not constitute financial advice, investment recommendations, or real financial services.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>6. Contact</h3>
+                    <p>For questions about this educational platform, please contact the development team through the provided support channels.</p>
+                </div>
+            </div>
+
+            <!-- PRIVACY POLICY COLUMN -->
+            <div class="legal-document">
+                <h2 class="legal-title">Privacy Policy</h2>
+
+                <div class="disclaimer-box">
+                    <h4>EDUCATIONAL PLATFORM NOTICE</h4>
+                    <p><strong>This is an educational demonstration platform.</strong> All data collected is for educational purposes only and relates to a fictional financial service. No real personal financial information should be entered or is processed.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>1. Information We Collect</h3>
+                    <p>For this educational demonstration, we may collect:</p>
+                    <ul>
+                        <li>Basic account information (username, email for demo purposes)</li>
+                        <li>Demo transaction data (simulated only)</li>
+                        <li>Platform usage data for educational analysis</li>
+                        <li>Support ticket information (for demonstration features)</li>
+                    </ul>
+                </div>
+
+                <div class="legal-section">
+                    <h3>2. How We Use Information</h3>
+                    <p>Information is used solely for:</p>
+                    <ul>
+                        <li>Demonstrating platform functionality</li>
+                        <li>Educational purposes and learning</li>
+                        <li>Improving the demo experience</li>
+                        <li>Portfolio demonstration</li>
+                    </ul>
+                </div>
+
+                <div class="legal-section">
+                    <h3>3. Data Security</h3>
+                    <p>While this is an educational platform with fictional data, we still implement basic security measures to protect any demonstration data entered.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>4. No Real Financial Data</h3>
+                    <p><strong>Important:</strong> Do not enter real financial information, social security numbers, real bank details, or other sensitive personal data. This platform is for educational demonstration only.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>5. Data Retention</h3>
+                    <p>Demo data may be retained for educational purposes and platform improvement. All data is understood to be fictional and for demonstration use only.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>6. Contact Information</h3>
+                    <p>For questions about this educational platform's privacy practices, please use the support ticket system or contact the development team.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>7. Cookies & Tracking</h3>
+                    <p>This educational platform may use basic cookies for demonstration purposes only. No personal tracking or analytics are performed beyond what's necessary for the educational demonstration.</p>
+                </div>
+
+                <div class="legal-section">
+                    <h3>8. Third-Party Services</h3>
+                    <p>Any third-party services integrated (such as news APIs) are used solely for educational demonstration and do not collect or process real user data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Trump Finance - Educational Platform Only</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

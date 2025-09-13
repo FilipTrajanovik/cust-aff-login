@@ -1,27 +1,25 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-from custLogin.models import Customer, Cryptocurrency, UserWallet
+from .models import Customer, Cryptocurrency, UserWallet
 
 
 @receiver(post_save, sender=Customer)
 def create_wallet_for_customer(sender, instance, created, **kwargs):
+    print(f"Signal triggered for customer: {instance.username}, created: {created}")
+
     if created:
         cryptos = Cryptocurrency.objects.all()
-        customer = Customer.objects.filter(pk=instance.pk)
-        existing_wallets = UserWallet.objects.filter(customer=instance).values_list('cryptocurrency_id', flat=True)
+        print(f"Found {cryptos.count()} cryptocurrencies")
+
         for crypto in cryptos:
-
-            if crypto.id in existing_wallets:
-                continue
-
             if crypto.coingecko_id == 'bitcoin':
                 balance = instance.balance / crypto.value_usd if crypto.value_usd else 0
             else:
                 balance = 0
 
-            UserWallet.objects.create(
+            wallet = UserWallet.objects.create(
                 customer=instance,
                 cryptocurrency=crypto,
                 balance=balance,
             )
+            print(f"Created {crypto.name} wallet with balance {balance}")

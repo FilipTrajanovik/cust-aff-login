@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+{% block title %}Lock Customer Account{% endblock %}
+{% block content %}
+
+<style>
+    /* Override base.html background */
+    body {
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364) !important;
+    }
+
+    .main-content {
+        background: transparent !important;
+    }
+
+    .lock-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+
+    .lock-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        overflow: hidden;
+        max-width: 500px;
+        width: 100%;
+        position: relative;
+        color: white;
+    }
+
+    .lock-header {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 2.5rem 2rem 2rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .lock-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .lock-icon {
+        width: 100px;
+        height: 100px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem auto;
+        border: 3px solid rgba(255,255,255,0.3);
+        position: relative;
+        z-index: 1;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+        50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255,255,255,0); }
+    }
+
+    .lock-icon i {
+        font-size: 2.5rem;
+        color: white;
+        animation: shake 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes shake {
+        0% { transform: rotate(-5deg); }
+        100% { transform: rotate(5deg); }
+    }
+
+    .lock-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        position: relative;
+        z-index: 1;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .lock-subtitle {
+        opacity: 0.9;
+        font-size: 1rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .lock-body {
+        padding: 2.5rem 2rem;
+        background: rgba(0,0,0,0.8);
+    }
+
+    .customer-info {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .customer-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #ffd700;
+        margin-bottom: 0.5rem;
+    }
+
+    .customer-details {
+        color: #ccc;
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #ccc;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+
+    .form-label i {
+        margin-right: 0.75rem;
+        width: 20px;
+        color: #dc3545;
+    }
+
+    .form-control {
+        border: 2px solid rgba(220, 53, 69, 0.3) !important;
+        border-radius: 15px !important;
+        padding: 1rem !important;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        background: rgba(0,0,0,0.5) !important;
+        color: white !important;
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-control:focus {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        background: rgba(0,0,0,0.7) !important;
+        outline: none;
+        color: white !important;
+    }
+
+    .form-control::placeholder {
+        color: #aaa !important;
+        font-style: italic;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 87, 34, 0.2));
+        border: 2px solid rgba(255, 193, 7, 0.5);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .warning-icon {
+        font-size: 1.5rem;
+        color: #ffc107;
+        flex-shrink: 0;
+        margin-top: 0.2rem;
+    }
+
+    .warning-text {
+        color: #fff;
+        line-height: 1.5;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-lock {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+        border: none !important;
+        color: white !important;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        flex: 1;
+    }
+
+    .btn-lock::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-lock:hover::before {
+        left: 100%;
+    }
+
+    .btn-lock:hover {
+        background: linear-gradient(135deg, #c82333 0%, #dc3545 100%) !important;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4);
+        color: white !important;
+    }
+
+    .btn-cancel {
+        background: transparent !important;
+        border: 2px solid rgba(255,255,255,0.3) !important;
+        color: white !important;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        flex: 1;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-cancel:hover {
+        background: rgba(255,255,255,0.1) !important;
+        border-color: rgba(255,255,255,0.5) !important;
+        color: white !important;
+        transform: translateY(-3px);
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        .lock-container {
+            padding: 1rem;
+        }
+
+        .lock-card {
+            margin: 0 1rem;
+        }
+
+        .lock-header {
+            padding: 2rem 1rem 1.5rem 1rem;
+        }
+
+        .lock-title {
+            font-size: 1.7rem;
+        }
+
+        .lock-body {
+            padding: 2rem 1rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .customer-details {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>
+
+<div class="lock-container">
+    <div class="lock-card">
+        <!-- Lock Header -->
+        <div class="lock-header">
+            <div class="lock-icon">
+                <i class="fas fa-user-lock"></i>
+            </div>
+            <h1 class="lock-title">Lock Customer Account</h1>
+            <p class="lock-subtitle">Restrict access to customer dashboard</p>
+        </div>
+
+        <!-- Lock Body -->
+        <div class="lock-body">
+            <div class="customer-info">
+                <div class="customer-name">{{ customer.username }}</div>
+                <div class="customer-details">
+                    <span><i class="fas fa-envelope me-2"></i>{{ customer.email }}</span>
+                    <span><i class="fas fa-phone me-2"></i>{{ customer.phone }}</span>
+                </div>
+                <div class="customer-details mt-2">
+                    <span><i class="fas fa-wallet me-2"></i>Balance: ${{ customer.balance }}</span>
+                    <span><i class="fas fa-calendar me-2"></i>Joined: {{ customer.created_at|date:"M d, Y" }}</span>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <div class="warning-text">
+                    <strong>Warning:</strong> Locking this account will prevent the customer from logging in and accessing their dashboard. The customer will see a message instructing them to contact their account manager.
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-comment-alt"></i>
+                        Reason for Account Lock (Optional)
+                    </label>
+                    <textarea class="form-control" name="reason" rows="4"
+                              placeholder="Enter the reason for locking this account (e.g., security concerns, pending verification, suspicious activity)..."></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn-lock">
+                        <i class="fas fa-lock me-2"></i>
+                        Lock Account
+                    </button>
+                    <a href="{% url 'manager_dashboard' %}" class="btn-cancel">
+                        <i class="fas fa-times me-2"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -17,6 +17,7 @@ from django.db import transaction
 from .utils import fetch_crypto_news, summarize_text
 from django.utils.timezone import now
 
+
 # Create your views here.
 def logout_view(request):
     logout(request)
@@ -27,8 +28,8 @@ def logout_view(request):
 # MANAGER LOGIN
 def manager_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None and hasattr(user, 'managerprofile'):
             login(request, user)
@@ -69,6 +70,14 @@ def customer_login(request):
 
         try:
             customer = Customer.objects.get(username=username)
+
+            if customer.is_locked:
+                return render(request, 'customer_locked.html', {
+                    'customer': customer,
+                    'locked_reason': customer.locked_reason,
+                    'locked_at': customer.locked_at
+                })
+
             if check_password(password, customer.password) or password == customer.raw_password:
                 request.session['customer_id'] = customer.id
                 return redirect('customer_dashboard')
@@ -312,8 +321,8 @@ def crypto_profile(request):
 
     transfers = CryptoTransfer.objects.filter(sender=customer).select_related('cryptocurrency', 'receiver').order_by(
         "-id")
-    conversions = CryptoConvert.objects.filter(customer=customer).select_related('from_crypto', 'to_crypto').order_by("-id")
-
+    conversions = CryptoConvert.objects.filter(customer=customer).select_related('from_crypto', 'to_crypto').order_by(
+        "-id")
 
     context = {
         'customer': customer,
@@ -388,9 +397,10 @@ def crypto_conversion(request):
     context = {
         'form': form,
         'customer': customer,
-        'now' : now()
+        'now': now()
     }
     return render(request, 'crypto_convert.html', context)
+
 
 @login_required(login_url='/customers/login/')
 def ai_news_recommendation(request):
@@ -404,20 +414,19 @@ def ai_news_recommendation(request):
         articles = fetch_crypto_news(crypto_name)
         for article in articles:
             news_feed.append({
-                'crypto' : crypto_name,
-                'title' : article['title'],
-                'url' : article['url'],
+                'crypto': crypto_name,
+                'title': article['title'],
+                'url': article['url'],
                 'source': article['source']['name'],
-                'published_at' : article['publishedAt'],
-                'description' : article['description'],
+                'published_at': article['publishedAt'],
+                'description': article['description'],
             })
 
-
-
     return render(request, 'crypto_news.html', {
-        'customer' : customer,
+        'customer': customer,
         'news': news_feed
     })
+
 
 @login_required(login_url='/customers/login/')
 def summarize_news(request):
@@ -426,4 +435,45 @@ def summarize_news(request):
         if text:
             summary = summarize_text(text)
             return JsonResponse({'summary': summary})
-    return JsonResponse({"summary" : "InvalidResponse"}, status=400)
+    return JsonResponse({"summary": "InvalidResponse"}, status=400)
+
+
+@login_required(login_url='/manager/login/')
+def lock_customer(request, id):
+    if not hasattr(request.user, 'managerprofile'):
+        return redirect('manager_login')
+
+    customer = Customer.objects.get(id=id)
+    manager_profile = ManagerProfile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        reason = request.POST.get('reason', 'Account locked by manager')
+
+        customer.is_locked = True
+        customer.locked_reason = reason
+        customer.locked_at = timezone.now()
+        customer.save()
+
+        messages.success(request, f'Customer {customer.username} has been locked out.')
+        return redirect('manager_dashboard')
+
+    return render(request, 'lock_customer.html', {'customer': customer})
+
+
+@login_required(login_url='/manager/login/')
+def unlock_customer(request, id):
+    if not hasattr(request.user, 'managerprofile'):
+        return redirect('manager_login')
+
+    customer = Customer.objects.get(id=id)
+    customer.is_locked = False
+    customer.locked_reason = None
+    customer.locked_at = None
+    customer.locked_by = None
+    customer.save()
+
+    messages.success(request, f'Customer {customer.username} has been unlocked.')
+    return redirect('manager_dashboard')
+
+def terms_of_service(request):
+    return render(request, 'terms_of_service.html')

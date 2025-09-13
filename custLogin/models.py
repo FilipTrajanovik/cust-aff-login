@@ -35,6 +35,11 @@ class Customer(models.Model):
 
     has_withdrawn = models.BooleanField(default=False)
 
+    is_locked = models.BooleanField(default=False)
+    locked_reason = models.TextField(blank=True, null=True)
+    locked_at = models.DateField(blank=True, null=True)
+
+
     def __str__(self):
         return f"{self.username} - {self.email}. Total for cashing out: {self.balance}"
 

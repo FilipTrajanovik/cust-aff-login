@@ -11,11 +11,17 @@
         transition: all 0.3s ease;
         border: 1px solid rgba(255,255,255,0.2);
         overflow: hidden;
+        position: relative;
     }
 
     .customer-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .customer-card.locked {
+        border-left: 4px solid #dc3545;
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.05), rgba(255, 255, 255, 1));
     }
 
     .customer-avatar {
@@ -30,6 +36,31 @@
         color: white;
         margin: 0 auto 1rem auto;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        position: relative;
+    }
+
+    .customer-avatar.locked {
+        background: linear-gradient(135deg, #dc3545 0%, #6c757d 100%);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .customer-avatar.locked::after {
+        content: '\f023';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        background: #dc3545;
+        color: white;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        border: 2px solid white;
     }
 
     .info-item {
@@ -65,6 +96,77 @@
         justify-content: center;
         font-size: 0.85rem;
     }
+
+    .status-badges {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .lock-status {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+
+    .lock-status .badge {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+
+    .btn-lock {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+        border: none;
+    }
+
+    .btn-lock:hover {
+        background: linear-gradient(135deg, #c82333, #dc3545);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-unlock {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+    }
+
+    .btn-unlock:hover {
+        background: linear-gradient(135deg, #20c997, #28a745);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .action-buttons .btn {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+
+    .lock-unlock-section {
+        grid-column: span 2;
+        margin-top: 0.5rem;
+    }
 </style>
 
 <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
@@ -80,17 +182,31 @@
 <div class="row g-4">
     {% for customer in customers %}
     <div class="col-lg-4 col-md-6">
-        <div class="customer-card p-4 h-100">
+        <div class="customer-card {% if customer.is_locked %}locked{% endif %} p-4 h-100">
+            <!-- Lock Status Badge -->
+            {% if customer.is_locked %}
+            <div class="lock-status">
+                <span class="badge bg-danger">
+                    <i class="fas fa-lock me-1"></i>Locked
+                </span>
+            </div>
+            {% endif %}
+
             <div class="text-center mb-3">
-                <div class="customer-avatar">
+                <div class="customer-avatar {% if customer.is_locked %}locked{% endif %}">
                     👤
                 </div>
                 <h5 class="mb-2">{{ customer.username }}</h5>
-                <div class="mb-2">
-                    {% if customer.can_cashout %}
-                        <span class="badge bg-success rounded-pill">✅ Eligible</span>
+
+                <div class="status-badges">
+                    {% if customer.is_locked %}
+                        <span class="badge bg-danger rounded-pill">🔒 Account Locked</span>
                     {% else %}
-                        <span class="badge bg-warning text-dark rounded-pill">⏳ Pending</span>
+                        {% if customer.can_cashout %}
+                            <span class="badge bg-success rounded-pill">✅ Eligible</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark rounded-pill">⏳ Pending</span>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -110,19 +226,42 @@
                     <i class="fas fa-dollar-sign info-icon"></i>
                     <span class="balance-highlight">${{ customer.balance }}</span>
                 </div>
+
+                {% if customer.is_locked and customer.locked_at %}
+                <div class="info-item">
+                    <i class="fas fa-clock info-icon"></i>
+                    <small class="text-muted">Locked: {{ customer.locked_at}}</small>
+                </div>
+                {% endif %}
             </div>
 
-            <div class="d-flex gap-2 mt-3">
-                <a href="{% url 'edit_customer' customer.id %}" class="btn btn-warning btn-sm btn-modern flex-fill">
+            <div class="action-buttons">
+                <a href="{% url 'edit_customer' customer.id %}" class="btn btn-warning btn-sm btn-modern">
                     ✏️ Edit
                 </a>
-                <a href="{% url 'view_customer' customer.id %}" class="btn btn-info btn-sm btn-modern flex-fill">
+                <a href="{% url 'view_customer' customer.id %}" class="btn btn-info btn-sm btn-modern">
                     👁 View
                 </a>
-                <a href="{% url 'delete_customer' customer.id %}" class="btn btn-danger btn-sm btn-modern flex-fill"
+                <a href="{% url 'delete_customer' customer.id %}" class="btn btn-danger btn-sm btn-modern"
                    onclick="return confirm('Delete this customer?');">
                     🗑 Delete
                 </a>
+
+                <!-- Lock/Unlock Section -->
+                <div class="lock-unlock-section">
+                    {% if customer.is_locked %}
+                        <a href="{% url 'unlock_customer' customer.id %}"
+                           class="btn btn-unlock btn-sm btn-modern w-100"
+                           onclick="return confirm('Are you sure you want to unlock {{ customer.username }}?');">
+                            <i class="fas fa-unlock me-1"></i>Unlock Account
+                        </a>
+                    {% else %}
+                        <a href="{% url 'lock_customer' customer.id %}"
+                           class="btn btn-lock btn-sm btn-modern w-100">
+                            <i class="fas fa-lock me-1"></i>Lock Account
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
