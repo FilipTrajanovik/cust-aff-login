@@ -194,7 +194,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.6s;
         }
 
@@ -388,55 +388,108 @@
                 gap: 1rem;
             }
         }
+
+        .chat-btn {
+            background: linear-gradient(135deg, #17a2b8 0%, #007bff 100%);
+            border: none;
+            color: white;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .chat-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .chat-btn:hover::before {
+            left: 100%;
+        }
+
+        .chat-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(23, 162, 184, 0.6);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .chat-btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+
+            .d-flex.gap-3 {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="{% static 'images/beloLogo-removebg-preview.png' %}" alt="Logo" height="40">
-                <span>Trump Finance</span>
-            </a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="{% url 'logout' %}">
-                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'images/beloLogo-removebg-preview.png' %}" alt="Logo" height="40">
+            <span>Trump Finance</span>
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <div class="container dashboard-container">
-        <div class="dashboard-header">
-            <h1 class="account-title">Financial Dashboard</h1>
-            <div class="customer-details">
-                <span><i class="fas fa-phone"></i>{{ customer.phone }}</span>
-                <span><i class="fas fa-envelope"></i>{{ customer.email }}</span>
-            </div>
+<div class="container dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="account-title">Financial Dashboard</h1>
+        <div class="customer-details">
+            <span><i class="fas fa-phone"></i>{{ customer.phone }}</span>
+            <span><i class="fas fa-envelope"></i>{{ customer.email }}</span>
         </div>
+    </div>
 
-        <div class="stats-grid">
-            <div class="stat-card total-balance">
-                <div class="stat-icon">
-                    <i class="fas fa-coins"></i>
-                </div>
-                <div class="stat-label">Total Portfolio Value</div>
-                <div class="stat-value">${{ customer.balance }}</div>
+    <div class="stats-grid">
+        <div class="stat-card total-balance">
+            <div class="stat-icon">
+                <i class="fas fa-coins"></i>
             </div>
-
-            <div class="stat-card available-balance">
-                <div class="stat-icon">
-                    <i class="fas fa-hand-holding-usd"></i>
-                </div>
-                <div class="stat-label">Available for Withdrawal</div>
-                <div class="stat-value">{% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}</div>
-            </div>
+            <div class="stat-label">Total Portfolio Value</div>
+            <div class="stat-value">${{ customer.balance }}</div>
         </div>
 
-        <div class="action-section">
+        <div class="stat-card available-balance">
+            <div class="stat-icon">
+                <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <div class="stat-label">Available for Withdrawal</div>
+            <div class="stat-value">{% if customer.can_cashout %}${{ customer.balance }}{% else %}$0.00{% endif %}</div>
+        </div>
+    </div>
+
+    <div class="action-section">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
             {% if customer.can_cashout %}
                 <a href="{% url 'crypto_home' %}" class="withdraw-btn">
                     <i class="fas fa-download me-3"></i>
@@ -444,67 +497,77 @@
                 </a>
             {% else %}
                 <div class="eligibility-notice">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;"></i><br>
+                    <i class="fas fa-exclamation-triangle"
+                       style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;"></i><br>
                     <strong>Account Verification Required</strong><br><br>
-                    Your account is currently under review. Contact your account manager to complete the verification process and unlock withdrawal privileges.
+                    Your account is currently under review. Contact your account manager to complete the verification
+                    process and unlock withdrawal privileges.
                 </div>
             {% endif %}
-        </div>
 
-        <div class="portfolio-section">
-            <h2 class="section-title">Crypto Holdings</h2>
-            <div class="crypto-portfolio">
-                <div class="crypto-item btc">
-                    <div class="crypto-icon">
-                        <i class="fab fa-bitcoin"></i>
-                    </div>
-                    <div class="crypto-name">Bitcoin</div>
-                    <div class="crypto-usd">${{ customer.balance }}</div>
-                    <div class="crypto-amount">{{ btc_amount }} BTC</div>
-                </div>
-
-                <div class="crypto-item eth">
-                    <div class="crypto-icon">
-                        <i class="fab fa-ethereum"></i>
-                    </div>
-                    <div class="crypto-name">Ethereum</div>
-                    <div class="crypto-usd">${{ customer.balance }}</div>
-                    <div class="crypto-amount">{{ eth_amount }} ETH</div>
-                </div>
-
-                <div class="crypto-item xrp">
-                    <div class="crypto-icon">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                    <div class="crypto-name">Ripple</div>
-                    <div class="crypto-usd">${{ customer.balance }}</div>
-                    <div class="crypto-amount">{{ xrp_amount }} XRP</div>
-                </div>
-
-                <div class="crypto-item xlm">
-                    <div class="crypto-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="crypto-name">Stellar</div>
-                    <div class="crypto-usd">${{ customer.balance }}</div>
-                    <div class="crypto-amount">{{ xlm_amount }} XLM</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="security-footer">
-            <div class="security-text">
-                <i class="fas fa-shield-alt"></i>
-                <span>Protected by military-grade encryption & multi-factor authentication</span>
-            </div>
-
-             <a href="{% url 'terms_of_service' %}" style="color: #aaa; font-size: 0.9rem; text-decoration: none; transition: color 0.3s ease;">
-                Terms of Service
+            <!-- Add Chat Button -->
+            <a href="{% url 'start_chat' %}" class="chat-btn">
+                <i class="fas fa-comments me-3"></i>
+                Live Chat Support
             </a>
-
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="portfolio-section">
+        <h2 class="section-title">Crypto Holdings</h2>
+        <div class="crypto-portfolio">
+            <div class="crypto-item btc">
+                <div class="crypto-icon">
+                    <i class="fab fa-bitcoin"></i>
+                </div>
+                <div class="crypto-name">Bitcoin</div>
+                <div class="crypto-usd">${{ customer.balance }}</div>
+                <div class="crypto-amount">{{ btc_amount }} BTC</div>
+            </div>
+
+            <div class="crypto-item eth">
+                <div class="crypto-icon">
+                    <i class="fab fa-ethereum"></i>
+                </div>
+                <div class="crypto-name">Ethereum</div>
+                <div class="crypto-usd">${{ customer.balance }}</div>
+                <div class="crypto-amount">{{ eth_amount }} ETH</div>
+            </div>
+
+            <div class="crypto-item xrp">
+                <div class="crypto-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="crypto-name">Ripple</div>
+                <div class="crypto-usd">${{ customer.balance }}</div>
+                <div class="crypto-amount">{{ xrp_amount }} XRP</div>
+            </div>
+
+            <div class="crypto-item xlm">
+                <div class="crypto-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="crypto-name">Stellar</div>
+                <div class="crypto-usd">${{ customer.balance }}</div>
+                <div class="crypto-amount">{{ xlm_amount }} XLM</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="security-footer">
+        <div class="security-text">
+            <i class="fas fa-shield-alt"></i>
+            <span>Protected by military-grade encryption & multi-factor authentication</span>
+        </div>
+
+        <a href="{% url 'terms_of_service' %}"
+           style="color: #aaa; font-size: 0.9rem; text-decoration: none; transition: color 0.3s ease;">
+            Terms of Service
+        </a>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

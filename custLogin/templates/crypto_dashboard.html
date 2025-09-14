@@ -37,6 +37,7 @@
             z-index: 1000;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
             border-right: 1px solid rgba(255, 215, 0, 0.2);
+            transition: transform 0.3s ease;
         }
 
         .sidebar-heading {
@@ -109,6 +110,7 @@
             padding: 2rem;
             background: linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(44, 83, 100, 0.8));
             min-height: 100vh;
+            width: calc(100% - 280px);
         }
 
         .dashboard-header {
@@ -138,7 +140,7 @@
         /* Chart Cards */
         .chart-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
@@ -282,7 +284,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
         }
 
@@ -325,45 +327,6 @@
             color: #dc3545;
         }
 
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            #sidebar-wrapper {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            #sidebar-wrapper.show {
-                transform: translateX(0);
-            }
-
-            #page-content-wrapper {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            #page-content-wrapper {
-                padding: 1rem;
-            }
-
-            .welcome-title {
-                font-size: 2rem;
-            }
-
-            .dashboard-header {
-                padding: 1.5rem;
-            }
-
-            .chart-card {
-                padding: 1rem;
-            }
-        }
-
         /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
@@ -374,13 +337,164 @@
             background: rgba(255, 215, 0, 0.9);
             border: none;
             border-radius: 8px;
-            padding: 0.5rem;
+            padding: 0.75rem;
             color: #1a1a1a;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .chart-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
         }
 
         @media (max-width: 1024px) {
             .mobile-menu-toggle {
                 display: block;
+            }
+
+            .mobile-overlay.show {
+                display: block;
+            }
+
+            #sidebar-wrapper {
+                transform: translateX(-100%);
+            }
+
+            #sidebar-wrapper.show {
+                transform: translateX(0);
+            }
+
+            #page-content-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #page-content-wrapper {
+                padding: 1rem 0.5rem;
+            }
+
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+
+            .dashboard-header {
+                padding: 1.5rem 1rem;
+            }
+
+            .chart-card {
+                padding: 1rem;
+            }
+
+            .chart-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .current-price {
+                text-align: left;
+                width: 100%;
+            }
+
+            .crypto-info {
+                width: 100%;
+            }
+
+            .crypto-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .crypto-details h3 {
+                font-size: 1.1rem;
+            }
+
+            .price-value {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-item {
+                padding: 0.75rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-header {
+                padding: 1rem;
+            }
+
+            .chart-card {
+                padding: 0.75rem;
+            }
+
+            .stats-overview {
+                padding: 1rem;
+            }
+
+            .mobile-menu-toggle {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.5rem;
+            }
+
+            .chart-grid {
+                gap: 1rem;
+            }
+        }
+
+        /* Better hover states for mobile */
+        @media (hover: none) {
+            .chart-card:hover {
+                transform: none;
+            }
+
+            .list-group-item:hover {
+                transform: none;
             }
         }
     </style>
@@ -390,6 +504,9 @@
     <button class="mobile-menu-toggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
 
     <div class="d-flex" id="wrapper">
         <!-- Enhanced Sidebar -->
@@ -561,10 +678,30 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // Mobile sidebar toggle
+        // Enhanced mobile sidebar toggle
         function toggleSidebar() {
-            document.getElementById('sidebar-wrapper').classList.toggle('show');
+            const sidebar = document.getElementById('sidebar-wrapper');
+            const overlay = document.getElementById('mobileOverlay');
+
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+
+            // Prevent body scrolling when sidebar is open
+            if (sidebar.classList.contains('show')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
         }
+
+        // Close sidebar when clicking on navigation links (mobile)
+        document.querySelectorAll('#sidebar-wrapper .list-group-item').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
 
         // Enhanced chart creation with error handling and better styling
         const createLiveChart = async (canvasId, label, color, coingeckoId, priceElementId, changeElementId) => {
@@ -646,7 +783,10 @@
                                 },
                                 ticks: {
                                     color: '#666',
-                                    maxTicksLimit: 6
+                                    maxTicksLimit: window.innerWidth <= 768 ? 4 : 6,
+                                    font: {
+                                        size: window.innerWidth <= 768 ? 10 : 12
+                                    }
                                 }
                             },
                             y: {
@@ -656,6 +796,9 @@
                                 },
                                 ticks: {
                                     color: '#666',
+                                    font: {
+                                        size: window.innerWidth <= 768 ? 10 : 12
+                                    },
                                     callback: function(value) {
                                         return '$' + value.toFixed(2);
                                     }
@@ -690,6 +833,15 @@
             document.getElementById('lastUpdate').textContent =
                 now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1024) {
+                document.getElementById('sidebar-wrapper').classList.remove('show');
+                document.getElementById('mobileOverlay').classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
 
         // Initialize charts
         Promise.all([

@@ -1,12 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.db import models
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 
 from .forms import CustomerForm, CustomerEditForm, CustomerCashOutForm, CryptoTransferForm, ConversionForm
-from .models import Customer, ManagerProfile, UserWallet, Cryptocurrency, CryptoConvert, CryptoTransfer
+from .models import Customer, ManagerProfile, UserWallet, Cryptocurrency, CryptoConvert, CryptoTransfer, ChatRoom, \
+    ChatMessage
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 
@@ -16,6 +18,9 @@ from django.db import transaction
 
 from .utils import fetch_crypto_news, summarize_text
 from django.utils.timezone import now
+
+from django.http import JsonResponse
+from django.db.models import Q
 
 
 # Create your views here.
@@ -59,7 +64,15 @@ def manager_dashboard(request):
         )
     else:
         customers = Customer.objects.filter(manager=profile)
-    return render(request, 'manager_dashboard.html', {'customers': customers})
+
+    total_unread_count = ChatMessage.objects.filter(
+        room__customer__manager=profile,
+        sender_customer__isnull=False,  # Messages from customers
+        is_read=False
+    ).count()
+
+    return render(request, 'manager_dashboard.html', {'customers': customers
+                                                      , 'total_unread_count': total_unread_count})
 
 
 # CUSTOMER LOGIN
@@ -477,3 +490,160 @@ def unlock_customer(request, id):
 
 def terms_of_service(request):
     return render(request, 'terms_of_service.html')
+
+
+@login_required(login_url='/customers/login/')
+def start_chat(request):
+    customer_id = request.session.get('customer_id')
+    customer = Customer.objects.get(id=customer_id)
+    room, created = ChatRoom.objects.get_or_create(
+        customer=customer,
+        is_active=True,
+        defaults={
+            'customer' : customer,
+            'subject' : 'Support Chat'
+        })
+
+    return redirect('chat_room', room_id = room.id)
+
+@login_required(login_url='/customers/login/')
+def chat_room(request, room_id):
+    customer_id = request.session.get('customer_id')
+    customer = Customer.objects.get(id=customer_id)
+    room = ChatRoom.objects.get(id=room_id, customer=customer)
+
+    mess = room.messages.order_by('created_at')
+
+    return render(request, 'chat_room.html', {
+        'room': room,
+        'messages': mess,
+        'customer': customer
+    })
+
+@login_required(login_url='/customers/login/')
+def send_customer_message(request):
+    if request.method == 'POST':
+        customer = Customer.objects.get(id=request.session['customer_id'])
+        room_id = request.POST.get('room_id')
+        message_text = request.POST.get('message')
+
+        if message_text and room_id:
+            room = ChatRoom.objects.get(id=room_id, customer=customer)
+            message = ChatMessage.objects.create(
+                room = room,
+                sender_customer = customer,
+                message = message_text
+            )
+            room.last_message_at = timezone.now()
+            room.save()
+            return JsonResponse({
+                'success': True,
+                'message_id': message.id,
+                'timestamp': message.created_at.strftime('%H:%M')
+            })
+
+    return JsonResponse({'success': False})
+
+
+@login_required(login_url='/customers/login/')
+def get_chat_messages(request, room_id):
+    customer_id = request.session.get('customer_id')
+    customer = Customer.objects.get(id=customer_id)
+    room = ChatRoom.objects.get(id=room_id, customer=customer)
+
+    last_message_id = request.GET.get('last_id', 0)
+    messages = room.messages.filter(id__gt=last_message_id)
+
+    messages_data = []
+    for msg in messages:
+        messages_data.append({
+            'id': msg.id,
+            'message': msg.message,
+            'timestamp': msg.created_at.strftime('%H:%M'),
+            'is_manager': bool(msg.sender_manager),
+            'sender_name': msg.sender_manager.user.username if msg.sender_manager else msg.sender_customer.username
+        })
+
+    return JsonResponse({'messages': messages_data})
+
+
+# Manager Views
+@login_required(login_url='/manager/login')
+def manager_chat_list(request):
+    if not hasattr(request.user, 'managerprofile'):
+        return redirect('manager_login')
+
+    manager_profile = ManagerProfile.objects.get(user=request.user)
+
+    # Get all chat rooms from manager's customers
+    chat_rooms = ChatRoom.objects.filter(
+        customer__manager=manager_profile,
+        is_active=True
+    ).annotate(
+        unread_count=models.Count('messages', filter=models.Q(
+            messages__sender_customer__isnull=False,
+            messages__is_read=False
+        ))
+    ).order_by('-last_message_at')
+
+    return render(request, 'manager_chat_list.html', {
+        'chat_rooms': chat_rooms,
+        'manager': manager_profile
+    })
+
+
+@login_required(login_url='/manager/login')
+def manager_chat_room(request, room_id):
+    if not hasattr(request.user, 'managerprofile'):
+        return redirect('manager_login')
+
+    manager_profile = ManagerProfile.objects.get(user=request.user)
+    room = ChatRoom.objects.get(
+        id=room_id,
+        customer__manager=manager_profile
+    )
+
+    # Assign manager to room if not already assigned
+    if not room.manager:
+        room.manager = manager_profile
+        room.save()
+
+    messages = room.messages.order_by('created_at')
+
+    return render(request, 'manager_chat_room.html', {
+        'room': room,
+        'messages': messages,
+        'manager': manager_profile
+    })
+
+
+@login_required(login_url='/manager/login')
+def send_manager_message(request):
+    if request.method == 'POST':
+        if not hasattr(request.user, 'managerprofile'):
+            return JsonResponse({'success': False})
+
+        manager_profile = ManagerProfile.objects.get(user=request.user)
+        room_id = request.POST.get('room_id')
+        message_text = request.POST.get('message')
+
+        if message_text and room_id:
+            room = ChatRoom.objects.get(
+                id=room_id,
+                customer__manager=manager_profile
+            )
+            message = ChatMessage.objects.create(
+                room=room,
+                sender_manager=manager_profile,
+                message=message_text
+            )
+            room.last_message_at = timezone.now()
+            room.save()
+
+            return JsonResponse({
+                'success': True,
+                'message_id': message.id,
+                'timestamp': message.created_at.strftime('%H:%M')
+            })
+
+    return JsonResponse({'success': False})

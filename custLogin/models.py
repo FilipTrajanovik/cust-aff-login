@@ -92,3 +92,27 @@ class CryptoConvert(models.Model):
 
     def __str__(self):
         return f"{self.from_crypto} -> {self.to_crypto}. Fee: {self.fee}"
+
+class ChatRoom(models.Model):
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    manager = models.ForeignKey(ManagerProfile, on_delete=models.SET_NULL, blank=True, null=True)
+    subject = models.CharField(max_length=200, default='General Support')
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    last_message_at = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Chat: {self.customer.username} - {self.subject}"
+
+
+class ChatMessage(models.Model):
+    room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
+    sender_customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
+    sender_manager = models.ForeignKey(ManagerProfile, on_delete=models.SET_NULL, blank=True, null=True)
+    message=models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['created_at',]

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Chat Support - Trump Finance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 20, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .navbar-brand:hover {
+            color: #ffd700;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0 1rem;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .chat-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-status {
+            color: #20c997;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #20c997;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-messages {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.6));
+            backdrop-filter: blur(15px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.customer {
+            align-items: flex-end;
+        }
+
+        .message.manager {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.customer .message-bubble {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .message.manager .message-bubble {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: white;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        .message-info {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-top: 0.25rem;
+        }
+
+        .message.customer .message-info {
+            text-align: right;
+        }
+
+        .message.manager .message-info {
+            text-align: left;
+        }
+
+        .chat-input {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0 0 20px 20px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+
+        .message-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #ffd700, #ff6b35);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 70vh;
+                margin: 1rem auto;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+
+            .chat-input {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'customer_dashboard' %}">
+            <i class="fas fa-chart-line"></i>
+            Trump Finance
+        </a>
+    </div>
+</nav>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <h2 class="chat-title">Live Support Chat</h2>
+        <div class="chat-status">
+            <span class="status-dot"></span>
+            Support Agent Available
+        </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        {% for message in messages %}
+            <div class="message {% if message.sender_customer %}customer{% else %}manager{% endif %}">
+                <div class="message-bubble">
+                    {{ message.message }}
+                </div>
+                <div class="message-info">
+                    {% if message.sender_customer %}
+                        You
+                    {% else %}
+                        Support Agent
+                    {% endif %}
+                    • {{ message.created_at|date:"H:i" }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="chat-input">
+        <input type="text"
+               id="messageInput"
+               class="message-input"
+               placeholder="Type your message..."
+               maxlength="500">
+        <button onclick="sendMessage()" class="send-btn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    let roomId = {{ room.id }};
+    let lastMessageId = {{ messages.last.id|default:0 }};
+    let isPolling = true;
+
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+
+        console.log('Attempting to send message:', message);
+
+        if (!message) {
+            console.log('Message is empty, not sending');
+            return;
+        }
+
+        // Get CSRF token from meta tag
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        const formData = new FormData();
+        formData.append('room_id', roomId);
+        formData.append('message', message);
+        formData.append('csrfmiddlewaretoken', csrfToken);
+
+        console.log('Sending to URL:', '{% url "send_customer_message" %}');
+        console.log('Room ID:', roomId);
+
+        fetch('{% url "send_customer_message" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                addMessage(message, 'customer', 'You', data.timestamp);
+                input.value = '';
+                scrollToBottom();
+            } else {
+                console.error('Failed to send message:', data);
+                alert('Failed to send message. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error sending message:', error);
+            alert('Network error. Please check your connection.');
+        });
+    }
+
+    function addMessage(message, type, sender, timestamp) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        messageDiv.innerHTML = `
+            <div class="message-bubble">${message}</div>
+            <div class="message-info">${sender} • ${timestamp}</div>
+        `;
+        messagesContainer.appendChild(messageDiv);
+    }
+
+    function pollMessages() {
+        if (!isPolling) return;
+
+        fetch(`{% url "get_chat_messages" room.id %}?last_id=${lastMessageId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.messages.forEach(msg => {
+                    if (msg.is_manager) {
+                        addMessage(msg.message, 'manager', 'Support Agent', msg.timestamp);
+                        scrollToBottom();
+                    }
+                    // Always update lastMessageId to the highest message ID
+                    if (msg.id > lastMessageId) {
+                        lastMessageId = msg.id;
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error polling messages:', error);
+            });
+    }
+
+    function scrollToBottom() {
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    document.getElementById('messageInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    setInterval(pollMessages, 2000);
+    setTimeout(scrollToBottom, 100);
+
+    window.addEventListener('beforeunload', () => {
+        isPolling = false;
+    });
+</script>
+</body>
+</html>

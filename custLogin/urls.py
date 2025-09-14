@@ -17,7 +17,7 @@ urlpatterns = [
     path('manage/customer/<int:id>/confirm-cashout', views.confirm_cashout, name='confirm_cashout'),
     path('manager/customer/<int:id>/delete/', views.delete_customer, name='delete_customer'),
     path('', lambda request: render(request, 'home.html'), name='home'),
-    path('customer/withdraw', views.withdraw_page, name = 'withdraw_page'),
+    path('customer/withdraw', views.withdraw_page, name='withdraw_page'),
     path('crypto/', crypto_home, name='crypto_home'),
     path('crypto/transfer/', crypto_transfer, name='crypto_transfer'),
     path('crypto/wallets/', display_wallets, name='display_wallets'),
@@ -28,4 +28,14 @@ urlpatterns = [
     path('manager/customer/<int:id>/lock/', lock_customer, name='lock_customer'),
     path('manager/customer/<int:id>/unlock/', unlock_customer, name='unlock_customer'),
     path('customer/terms-of-service/', terms_of_service, name='terms_of_service'),
+
+    path('customers/chat/start/', views.start_chat, name='start_chat'),
+    path('customers/chat/<int:room_id>/', views.chat_room, name='chat_room'),
+    path('customers/chat/send/', views.send_customer_message, name='send_customer_message'),
+    path('customers/chat/<int:room_id>/messages/', views.get_chat_messages, name='get_chat_messages'),
+
+
+    path('manager/chats/', views.manager_chat_list, name='manager_chat_list'),
+    path('manager/chat/<int:room_id>/', views.manager_chat_room, name='manager_chat_room'),
+    path('manager/chat/send/', views.send_manager_message, name='send_manager_message'),
 ]
