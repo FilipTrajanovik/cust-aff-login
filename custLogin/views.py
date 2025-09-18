@@ -198,7 +198,7 @@ def delete_customer(request, id):
     return redirect('manager_dashboard')
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def withdraw_page(request):
     customer_id = request.session.get('customer_id')
     if not customer_id:
@@ -235,7 +235,7 @@ def withdraw_page(request):
     return redirect('crypto_wallets')
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def crypto_home(request):
     customer_id = request.session['customer_id']
     if not customer_id:
@@ -304,7 +304,7 @@ def crypto_transfer(request):
     return render(request, 'crypto_transfer.html', {'form': form, 'customer': customer})
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def display_wallets(request):
     customer_id = request.session.get('customer_id')
 
@@ -324,7 +324,7 @@ def display_wallets(request):
     return render(request, 'crypto_wallets.html', context)
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def crypto_profile(request):
     customer_id = request.session['customer_id']
     if not customer_id:
@@ -345,7 +345,7 @@ def crypto_profile(request):
     return render(request, 'crypto_profile.html', context)
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def crypto_conversion(request):
     customer_id = request.session.get('customer_id')
     if not customer_id:
@@ -415,7 +415,7 @@ def crypto_conversion(request):
     return render(request, 'crypto_convert.html', context)
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def ai_news_recommendation(request):
     customer_id = request.session.get('customer_id')
     customer = Customer.objects.get(id=customer_id)
@@ -441,7 +441,7 @@ def ai_news_recommendation(request):
     })
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def summarize_news(request):
     if request.method == 'POST':
         text = request.POST.get("text", "")
@@ -492,7 +492,7 @@ def terms_of_service(request):
     return render(request, 'terms_of_service.html')
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def start_chat(request):
     customer_id = request.session.get('customer_id')
     customer = Customer.objects.get(id=customer_id)
@@ -506,7 +506,7 @@ def start_chat(request):
 
     return redirect('chat_room', room_id = room.id)
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def chat_room(request, room_id):
     customer_id = request.session.get('customer_id')
     customer = Customer.objects.get(id=customer_id)
@@ -520,7 +520,7 @@ def chat_room(request, room_id):
         'customer': customer
     })
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def send_customer_message(request):
     if request.method == 'POST':
         customer = Customer.objects.get(id=request.session['customer_id'])
@@ -545,7 +545,7 @@ def send_customer_message(request):
     return JsonResponse({'success': False})
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def get_chat_messages(request, room_id):
     customer_id = request.session.get('customer_id')
     customer = Customer.objects.get(id=customer_id)
