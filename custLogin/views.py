@@ -200,6 +200,10 @@ def delete_customer(request, id):
 
 @login_required(login_url='/customer/login/')
 def withdraw_page(request):
+    print(f"WITHDRAW - User authenticated: {request.user.is_authenticated}")
+    print(f"WITHDRAW - Username: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
+    print(f"WITHDRAW - Session customer_id: {request.session.get('customer_id')}")
+
     customer_id = request.session.get('customer_id')
     if not customer_id:
         return redirect('customer_login')
@@ -237,6 +241,10 @@ def withdraw_page(request):
 
 @login_required(login_url='/customer/login/')
 def crypto_home(request):
+    print(f"CRYPTO_HOME - User authenticated: {request.user.is_authenticated}")
+    print(f"CRYPTO_HOME - Username: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
+    print(f"CRYPTO_HOME - Session customer_id: {request.session.get('customer_id')}")
+
     customer_id = request.session['customer_id']
     if not customer_id:
         return redirect('customer_login')
@@ -251,7 +259,7 @@ def crypto_home(request):
     return render(request, 'crypto_dashboard.html', context)
 
 
-@login_required(login_url='/customers/login/')
+@login_required(login_url='/customer/login/')
 def crypto_transfer(request):
     customer_id = request.session.get('customer_id')
     if not customer_id:
@@ -494,6 +502,11 @@ def terms_of_service(request):
 
 @login_required(login_url='/customer/login/')
 def start_chat(request):
+    print(f"START_CHAT - User authenticated: {request.user.is_authenticated}")
+    print(f"START_CHAT - Username: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
+    print(f"START_CHAT - Session customer_id: {request.session.get('customer_id')}")
+
+
     customer_id = request.session.get('customer_id')
     customer = Customer.objects.get(id=customer_id)
     room, created = ChatRoom.objects.get_or_create(
