@@ -72,7 +72,7 @@ def manager_dashboard(request):
     ).count()
 
     return render(request, 'manager_dashboard.html', {'customers': customers
-                                                      , 'total_unread_count': total_unread_count})
+        , 'total_unread_count': total_unread_count})
 
 
 # CUSTOMER LOGIN
@@ -198,7 +198,7 @@ def delete_customer(request, id):
     return redirect('manager_dashboard')
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def withdraw_page(request):
     print(f"WITHDRAW - User authenticated: {request.user.is_authenticated}")
     print(f"WITHDRAW - Username: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
@@ -239,7 +239,7 @@ def withdraw_page(request):
     return redirect('crypto_wallets')
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def crypto_home(request):
     print(f"CRYPTO_HOME - User authenticated: {request.user.is_authenticated}")
     print(f"CRYPTO_HOME - Username: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
@@ -259,7 +259,7 @@ def crypto_home(request):
     return render(request, 'crypto_dashboard.html', context)
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def crypto_transfer(request):
     customer_id = request.session.get('customer_id')
     if not customer_id:
@@ -312,7 +312,7 @@ def crypto_transfer(request):
     return render(request, 'crypto_transfer.html', {'form': form, 'customer': customer})
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def display_wallets(request):
     customer_id = request.session.get('customer_id')
 
@@ -332,7 +332,7 @@ def display_wallets(request):
     return render(request, 'crypto_wallets.html', context)
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def crypto_profile(request):
     customer_id = request.session['customer_id']
     if not customer_id:
@@ -353,7 +353,7 @@ def crypto_profile(request):
     return render(request, 'crypto_profile.html', context)
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def crypto_conversion(request):
     customer_id = request.session.get('customer_id')
     if not customer_id:
@@ -423,9 +423,13 @@ def crypto_conversion(request):
     return render(request, 'crypto_convert.html', context)
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def ai_news_recommendation(request):
     customer_id = request.session.get('customer_id')
+
+    if not customer_id:
+        return redirect('customer_login')
+
     customer = Customer.objects.get(id=customer_id)
     wallets = customer.wallets.select_related('cryptocurrency')
 
@@ -449,8 +453,13 @@ def ai_news_recommendation(request):
     })
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def summarize_news(request):
+    customer_id = request.session.get('customer_id')
+
+    if not customer_id:
+        return redirect('customer_login')
+
     if request.method == 'POST':
         text = request.POST.get("text", "")
         if text:
@@ -496,32 +505,39 @@ def unlock_customer(request, id):
     messages.success(request, f'Customer {customer.username} has been unlocked.')
     return redirect('manager_dashboard')
 
+
 def terms_of_service(request):
     return render(request, 'terms_of_service.html')
 
 
-@login_required(login_url='/customer/login/')
+# @login_required(login_url='/customer/login/')
 def start_chat(request):
     print(f"START_CHAT - User authenticated: {request.user.is_authenticated}")
     print(f"START_CHAT - Username: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
     print(f"START_CHAT - Session customer_id: {request.session.get('customer_id')}")
 
-
     customer_id = request.session.get('customer_id')
+    if not customer_id:
+        return redirect('customer_login')
     customer = Customer.objects.get(id=customer_id)
     room, created = ChatRoom.objects.get_or_create(
         customer=customer,
         is_active=True,
         defaults={
-            'customer' : customer,
-            'subject' : 'Support Chat'
+            'customer': customer,
+            'subject': 'Support Chat'
         })
 
-    return redirect('chat_room', room_id = room.id)
+    return redirect('chat_room', room_id=room.id)
 
-@login_required(login_url='/customer/login/')
+
+#@login_required(login_url='/customer/login/')
 def chat_room(request, room_id):
     customer_id = request.session.get('customer_id')
+
+    if not customer_id:
+        return redirect('customer_login')
+
     customer = Customer.objects.get(id=customer_id)
     room = ChatRoom.objects.get(id=room_id, customer=customer)
 
@@ -533,7 +549,8 @@ def chat_room(request, room_id):
         'customer': customer
     })
 
-@login_required(login_url='/customer/login/')
+
+#@login_required(login_url='/customer/login/')
 def send_customer_message(request):
     if request.method == 'POST':
         customer = Customer.objects.get(id=request.session['customer_id'])
@@ -543,9 +560,9 @@ def send_customer_message(request):
         if message_text and room_id:
             room = ChatRoom.objects.get(id=room_id, customer=customer)
             message = ChatMessage.objects.create(
-                room = room,
-                sender_customer = customer,
-                message = message_text
+                room=room,
+                sender_customer=customer,
+                message=message_text
             )
             room.last_message_at = timezone.now()
             room.save()
@@ -558,9 +575,13 @@ def send_customer_message(request):
     return JsonResponse({'success': False})
 
 
-@login_required(login_url='/customer/login/')
+#@login_required(login_url='/customer/login/')
 def get_chat_messages(request, room_id):
     customer_id = request.session.get('customer_id')
+
+    if not customer_id:
+        return redirect('customer_login')
+
     customer = Customer.objects.get(id=customer_id)
     room = ChatRoom.objects.get(id=room_id, customer=customer)
 
